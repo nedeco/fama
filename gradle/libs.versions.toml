@@ -1,0 +1,21 @@
+[versions]
+kotlin = "2.1.0"
+kotlinx-serialization = "1.7.1"
+krossbow-stomp = "7.0.0"
+kmqtt = "1.0.0"
+
+[libraries]
+kmqtt-broker = { module = "io.github.davidepianca98:kmqtt-broker", version.ref = "kmqtt" }
+kmqtt-common = { module = "io.github.davidepianca98:kmqtt-common", version.ref = "kmqtt" }
+krossbow-stomp-kotlinx-serialization = { module = "org.hildan.krossbow:krossbow-stomp-kxserialization", version.ref = "krossbow-stomp" }
+krossbow-stomp-builtin = { module = "org.hildan.krossbow:krossbow-websocket-builtin", version.ref = "krossbow-stomp" }
+kotlinx-datetime = { module = "org.jetbrains.kotlinx:kotlinx-datetime", version = "0.6.1"}
+kotlinx-serialization = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinx-serialization" }
+
+[bundles]
+kmqtt = ["kmqtt-common", "kmqtt-broker"]
+krossbow-stomp = ["krossbow-stomp-kotlinx-serialization", "krossbow-stomp-builtin"]
+
+[plugins]
+kotlinMultiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
+kotlinxSerialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
