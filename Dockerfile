@@ -1,4 +1,4 @@
-FROM gradle:8.9.0-jdk21 AS build
+FROM gradle:jdk21-corretto-al2023 AS build
 COPY --chown=gradle:gradle . /app
 WORKDIR /app
 
