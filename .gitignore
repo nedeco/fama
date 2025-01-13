@@ -6,15 +6,28 @@ build/
 
 ### IntelliJ IDEA ###
 .idea/modules.xml
+.idea/gradle.xml
+.idea/misc.xml
 .idea/jarRepositories.xml
 .idea/compiler.xml
 .idea/libraries/
+.idea/artifacts
+.idea/modules
+.idea/git_*.xml
 *.iws
 *.iml
 *.ipr
 out/
 !**/src/main/**/out/
 !**/src/test/**/out/
+
+### VisualStudioCode ###
+.vscode/
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
 
 ### Eclipse ###
 .apt_generated
@@ -41,8 +54,14 @@ bin/
 ### Mac OS ###
 .DS_Store
 
+### Direnv + Nix ###
+.direnv
+
 ### Kotlin Native ###
 .kotlin/
 
 ### Smart Home ###
 smart-home/
+
+## ENV ##
+.env

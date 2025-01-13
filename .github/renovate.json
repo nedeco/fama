@@ -1,0 +1,27 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": [
+    "config:recommended",
+    ":rebaseStalePrs",
+    ":semanticCommits",
+    ":semanticCommitScope(deps)"
+  ],
+  "lockFileMaintenance": {
+    "enabled": true,
+    "automerge": false,
+    "schedule": ["before 8am on monday"]
+  },
+  "packageRules": [
+    {
+      "matchUpdateTypes": ["major"],
+      "schedule": ["before 8am on monday"]
+    },
+    {
+      "matchUpdateTypes": ["minor", "patch"],
+      "groupName": "all minor and patch dependencies",
+      "groupSlug": "all-minor-patch",
+      "schedule": ["before 8am on monday"],
+      "automerge": false
+    }
+  ]
+}

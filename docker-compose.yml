@@ -6,4 +6,16 @@ services:
       - ./smart-home/ha/config/:/config
     restart: unless-stopped
     privileged: true
-    network_mode: host
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    ports:
+      - "8123:8123"
+
+  ioBroker:
+    container_name: ioBroker
+    image: "buanet/iobroker:v10.0.0"
+    volumes:
+      - ./smart-home/iobroker/:/opt/iobroker
+    restart: unless-stopped
+    ports:
+      - "8081:8081"
