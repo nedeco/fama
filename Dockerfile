@@ -23,8 +23,8 @@ LABEL \
     maintainer="Nedeco" \
     org.opencontainers.image.title="Fama" \
     org.opencontainers.image.description="Fama integrates Smart City systems from the German city of Solingen into smart home environments." \
-    org.opencontainers.image.authors="Nedeco" \
+    org.opencontainers.image.authors="Nedeco"
 
 COPY --from=build /app/build/libs/fama-jvm-*.jar /fama.jar
 
-ENTRYPOINT ["/fama.jar"]
+ENTRYPOINT ["java", "-jar", "/fama.jar"]
