@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Login of RabbitMQ to docker image
 - GitHub Actions to build and deploy fama as docker image
 - Home Assistant Adapter
 - Twin Message Manager to receive sensor date and later more from RabbitMQ
