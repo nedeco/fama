@@ -3,30 +3,32 @@ kotlin = "2.1.0"
 kotlinx-serialization = "1.7.1"
 krossbow-stomp = "8.2.0"
 kmqtt = "1.0.0"
-sentry = "0.10.0"
 kermit = "2.0.4"
 kotlin-ktor = "3.0.3"
+ktlint = "12.1.2"
+sentry-gradle = "4.14.1"
+logback = "1.5.16"
 
 [libraries]
-kmqtt-broker = { module = "io.github.davidepianca98:kmqtt-broker", version.ref = "kmqtt" }
-kmqtt-client = { module = "io.github.davidepianca98:kmqtt-client", version.ref = "kmqtt" }
-kmqtt-common = { module = "io.github.davidepianca98:kmqtt-common", version.ref = "kmqtt" }
+kmqtt-broker = { module = "io.github.davidepianca98:kmqtt-broker-jvm", version.ref = "kmqtt" }
+kmqtt-client = { module = "io.github.davidepianca98:kmqtt-client-jvm", version.ref = "kmqtt" }
+kmqtt-common = { module = "io.github.davidepianca98:kmqtt-common-jvm", version.ref = "kmqtt" }
 krossbow-stomp-core = { module = "org.hildan.krossbow:krossbow-stomp-core", version.ref = "krossbow-stomp" }
 krossbow-stomp-ktor = { module = "org.hildan.krossbow:krossbow-websocket-ktor", version.ref = "krossbow-stomp" }
 kotlin-reflect = { module = "org.jetbrains.kotlin:kotlin-reflect", version.ref = "kotlin"}
-
 kotlinx-datetime = { module = "org.jetbrains.kotlinx:kotlinx-datetime", version = "0.6.1"}
 kotlinx-serialization = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinx-serialization" }
-sentry = { module = "io.sentry:sentry-kotlin-multiplatform", version.ref = "sentry" }
 kermit = { module = "co.touchlab:kermit", version.ref = "kermit" }
+logback = { module = "ch.qos.logback:logback-classic", version.ref = "logback" }
 
 kotlin-ktor-cio = { module = "io.ktor:ktor-client-cio", version.ref = "kotlin-ktor"}
-kotlin-ktor-darwin = { module = "io.ktor:ktor-client-darwin", version.ref = "kotlin-ktor"}
 
 [bundles]
 kmqtt = ["kmqtt-common", "kmqtt-broker", "kmqtt-client"]
 krossbow-stomp = ["krossbow-stomp-core", "krossbow-stomp-ktor"]
 
 [plugins]
-kotlin-multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
+kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
 kotlinx-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
+ktlint = { id = "org.jlleitschuh.gradle.ktlint", version.ref = "ktlint" }
+sentry = { id = "io.sentry.jvm.gradle", version.ref = "sentry-gradle" }

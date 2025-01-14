@@ -37,3 +37,4 @@ jobs:
             RABBIT_MQ_STOMP_URL=${{ vars.RABBIT_MQ_STOMP_URL }}
             RABBIT_MQ_STOMP_USERNAME=${{ vars.RABBIT_MQ_STOMP_USERNAME }}
             RABBIT_MQ_STOMP_PASSWORD=${{ secrets.RABBIT_MQ_STOMP_PASSWORD }}
+            FAMA_VERSION=${{ github.ref_name }}

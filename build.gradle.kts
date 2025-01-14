@@ -1,8 +1,9 @@
-import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 
 plugins {
-    alias(libs.plugins.kotlin.multiplatform)
+    alias(libs.plugins.kotlin.jvm)
     alias(libs.plugins.kotlinx.serialization)
+    alias(libs.plugins.ktlint)
+    application
 }
 
 group = "de.osca.fama"
@@ -12,62 +13,41 @@ repositories {
     mavenCentral()
 }
 
+dependencies {
+    implementation(libs.kotlin.reflect)
+    implementation(libs.kotlinx.serialization)
+    implementation(libs.kotlinx.datetime)
+    implementation(libs.bundles.krossbow.stomp)
+    implementation(libs.bundles.kmqtt)
+    implementation(libs.kermit)
+    implementation(libs.logback)
+
+    implementation(libs.kotlin.ktor.cio)
+}
+
+application {
+    mainClass = "de.osca.fama.MainKt"
+}
+
 kotlin {
-    val hostOs = System.getProperty("os.name")
-    val arch = System.getProperty("os.arch")
-    val nativeTarget = when {
-        hostOs == "Mac OS X" && arch == "x86_64" -> macosX64("native")
-        hostOs == "Mac OS X" && arch == "aarch64" -> macosArm64("native")
-        hostOs == "Linux" && (arch == "x86_64" || arch == "amd64") -> linuxX64("native")
-        hostOs == "Linux" && arch == "aarch64" -> linuxArm64("native")
-        // Other supported targets are listed here: https://ktor.io/docs/native-server.html#targets
-        else -> throw GradleException("Host OS ($hostOs/$arch) is not supported in Fama use Java instead.")
-    }
-
-    nativeTarget.binaries.executable {
-        entryPoint = "de.osca.fama.main"
-    }
-
-    jvm {
-        @OptIn(ExperimentalKotlinGradlePluginApi::class)
-        mainRun {
-            mainClass = "de.osca.fama.MainKt"
-        }
-        withJava()
-    }
     sourceSets {
-        val commonMain by getting {
+        val main by getting {
             kotlin.srcDir("build/generated/src/main/kotlin")
-            dependencies {
-                implementation(libs.kotlin.reflect)
-                implementation(libs.kotlinx.serialization)
-                implementation(libs.kotlinx.datetime)
-                implementation(libs.bundles.krossbow.stomp)
-                implementation(libs.bundles.kmqtt)
-                implementation(libs.kermit)
-
-                implementation(libs.kotlin.ktor.cio)
-            }
-        }
-        val nativeMain by getting {
-            dependencies {
-                implementation(libs.kotlin.ktor.darwin)
-            }
-        }
-        val jvmMain by getting {
-            dependencies {
-                implementation("ch.qos.logback:logback-core:1.5.16")
-                implementation("ch.qos.logback:logback-classic:1.5.16")
-            }
         }
     }
 }
 
-tasks.named("compileKotlinNative") {
-    dependsOn("generateBuildConfig")
+tasks.jar {
+    manifest.attributes["Main-Class"] = application.mainClass
+    val dependencies = configurations
+        .runtimeClasspath
+        .get()
+        .map(::zipTree)
+    from(dependencies)
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
 }
 
-tasks.named("compileKotlinJvm") {
+tasks.named("compileKotlin") {
     dependsOn("generateBuildConfig")
 }
 
@@ -79,16 +59,17 @@ task("generateBuildConfig") {
         outputDir.mkdirs()
         file("${outputDir.path}/BuildConfig.kt").writeText(
             """
-                package de.osca.fama.generated
+            package de.osca.fama.generated
 
-                object BuildConfig {
-                    const val VERSION: String = "${project.version}"
-                    val SUPPORT_URL: String = ${getEnv("SUPPORT_URL")}
-                    val RABBIT_MQ_STOMP_URL: String = ${getEnv("RABBIT_MQ_STOMP_URL")}
-                    val RABBIT_MQ_STOMP_USERNAME: String = ${getEnv("RABBIT_MQ_STOMP_USERNAME")}
-                    val RABBIT_MQ_STOMP_PASSWORD: String = ${getEnv("RABBIT_MQ_STOMP_PASSWORD")}
-                    val SENTRY_DSN: String = ${getEnv("SENTRY_DSN")}
-                }
+            object BuildConfig {
+                const val VERSION: String = "${project.version}"
+                val SUPPORT_URL: String = ${getEnv("SUPPORT_URL")}
+                val RABBIT_MQ_STOMP_URL: String = ${getEnv("RABBIT_MQ_STOMP_URL")}
+                val RABBIT_MQ_STOMP_USERNAME: String = ${getEnv("RABBIT_MQ_STOMP_USERNAME")}
+                val RABBIT_MQ_STOMP_PASSWORD: String = ${getEnv("RABBIT_MQ_STOMP_PASSWORD")}
+                val SENTRY_DSN: String = ${getEnv("SENTRY_DSN")}
+            }
+            
             """.trimIndent()
         )
     }

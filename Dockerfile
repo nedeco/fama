@@ -15,9 +15,9 @@ ENV RABBIT_MQ_STOMP_PASSWORD=$RABBIT_MQ_STOMP_PASSWORD
 COPY --chown=gradle:gradle . /app
 WORKDIR /app
 
-RUN gradle jvmJar --no-daemon
+RUN gradle jar --no-daemon -P version=$FAMA_VERSION
 
-FROM amazoncorretto:21.0.5-al2023-headless AS fama
+FROM bellsoft/liberica-openjdk-alpine:21 AS fama
 
 LABEL \
     maintainer="Nedeco" \
@@ -25,6 +25,6 @@ LABEL \
     org.opencontainers.image.description="Fama integrates Smart City systems from the German city of Solingen into smart home environments." \
     org.opencontainers.image.authors="Nedeco"
 
-COPY --from=build /app/build/libs/fama-jvm-*.jar /fama.jar
+COPY --from=build /app/build/libs/fama-*.jar /fama.jar
 
 ENTRYPOINT ["java", "-jar", "/fama.jar"]
