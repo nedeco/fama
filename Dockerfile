@@ -18,6 +18,13 @@ WORKDIR /app
 RUN gradle jvmJar --no-daemon
 
 FROM amazoncorretto:21.0.5-al2023-headless AS fama
+
+LABEL \
+    maintainer="Nedeco" \
+    org.opencontainers.image.title="Fama" \
+    org.opencontainers.image.description="Fama integrates Smart City systems from the German city of Solingen into smart home environments." \
+    org.opencontainers.image.authors="Nedeco" \
+
 COPY --from=build /app/build/libs/fama-jvm-*.jar /fama.jar
 
 ENTRYPOINT ["/fama.jar"]
