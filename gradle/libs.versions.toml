@@ -1,9 +1,9 @@
 [versions]
 kotlin = "2.1.0"
-kotlinx-serialization = "1.7.1"
+kotlinx-serialization = "1.8.0"
 krossbow-stomp = "8.2.0"
 kmqtt = "1.0.0"
-kermit = "2.0.4"
+kermit = "2.0.5"
 kotlin-ktor = "3.0.3"
 ktlint = "12.1.2"
 sentry-gradle = "4.14.1"

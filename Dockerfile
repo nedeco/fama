@@ -17,7 +17,7 @@ WORKDIR /app
 
 RUN gradle jar --no-daemon -P version=$FAMA_VERSION
 
-FROM bellsoft/liberica-openjdk-alpine:21 AS fama
+FROM bellsoft/liberica-openjdk-alpine:21.0.5 AS fama
 
 LABEL \
     maintainer="Nedeco" \
