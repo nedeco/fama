@@ -6,22 +6,32 @@ kmqtt = "1.0.0"
 kermit = "2.0.5"
 kotlin-ktor = "3.0.3"
 ktlint = "12.1.2"
+ktlint-github-reporter = "3.1.0"
 sentry-gradle = "4.14.1"
 logback = "1.5.16"
 
 [libraries]
+# MQTT Client & Broker
 kmqtt-broker = { module = "io.github.davidepianca98:kmqtt-broker-jvm", version.ref = "kmqtt" }
 kmqtt-client = { module = "io.github.davidepianca98:kmqtt-client-jvm", version.ref = "kmqtt" }
 kmqtt-common = { module = "io.github.davidepianca98:kmqtt-common-jvm", version.ref = "kmqtt" }
+
+# Stomp Client
 krossbow-stomp-core = { module = "org.hildan.krossbow:krossbow-stomp-core", version.ref = "krossbow-stomp" }
 krossbow-stomp-ktor = { module = "org.hildan.krossbow:krossbow-websocket-ktor", version.ref = "krossbow-stomp" }
+kotlin-ktor-cio = { module = "io.ktor:ktor-client-cio", version.ref = "kotlin-ktor"}
+
+# Kotlin
 kotlin-reflect = { module = "org.jetbrains.kotlin:kotlin-reflect", version.ref = "kotlin"}
 kotlinx-datetime = { module = "org.jetbrains.kotlinx:kotlinx-datetime", version = "0.6.1"}
 kotlinx-serialization = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinx-serialization" }
+
+# Logger
 kermit = { module = "co.touchlab:kermit", version.ref = "kermit" }
 logback = { module = "ch.qos.logback:logback-classic", version.ref = "logback" }
 
-kotlin-ktor-cio = { module = "io.ktor:ktor-client-cio", version.ref = "kotlin-ktor"}
+# Ktlint Reporter
+ktlint-reporter-github = { module = "de.musichin.ktlint.reporter:ktlint-reporter-github", version.ref = "ktlint-github-reporter" }
 
 [bundles]
 kmqtt = ["kmqtt-common", "kmqtt-broker", "kmqtt-client"]
