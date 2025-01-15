@@ -11,14 +11,18 @@ import io.sentry.kotlin.SentryContext
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
 import kotlinx.coroutines.withContext
 
-object FamaApplication {
+object FamaApplication: KoinComponent {
+    private val mqttManager: MqttManager by inject()
+    val settings: Settings by inject()
     private val logger by logger()
 
     init {
         logger.i { "Start" }
-        if (Settings.ENABLE_SENTRY && BuildConfig.SENTRY_DSN !is Nothing) {
+        if (settings.ENABLE_SENTRY && BuildConfig.SENTRY_DSN !is Nothing) {
             setupSentry()
         }
     }
@@ -34,12 +38,12 @@ object FamaApplication {
             scope.setContexts(
                 "Settings",
                 mapOf(
-                    "Debug" to Settings.DEBUG,
-                    "MQTT TLS Enabled" to Settings.MQTT_TLS_ENABLED,
-                    "MQTT Port" to Settings.MQTT_PORT,
-                    "Sensor Station enabled" to Settings.ENABLE_SENSOR_STATION,
-                    "Home Assistant discovery prefix" to Settings.HOME_ASSISTANT_DISCOVERY_PREFIX,
-                    "Smart home type" to Settings.SMART_HOME_TYPE,
+                    "Debug" to settings.DEBUG,
+                    "MQTT TLS Enabled" to settings.MQTT_TLS_ENABLED,
+                    "MQTT Port" to settings.MQTT_PORT,
+                    "Sensor Station enabled" to settings.ENABLE_SENSOR_STATION,
+                    "Home Assistant discovery prefix" to settings.HOME_ASSISTANT_DISCOVERY_PREFIX,
+                    "Smart home type" to settings.SMART_HOME_TYPE,
                 ),
             )
         }
@@ -48,26 +52,31 @@ object FamaApplication {
 
     @Throws(EnvVarMissingException::class)
     suspend fun start() = withContext(Dispatchers.Default + SentryContext()) {
-        MqttManager.start()
+        logger.i { "Start Fama" }
+        if (settings.MQTT_ENABLE ) {
+            mqttManager.start()
+        }
         TwinMessageManager.start()
 
-        val mqtt =
-            async {
-                MqttManager.listen()
+        val mqtt = async {
+            if (settings.MQTT_ENABLE ) {
+                mqttManager.listen()
             }
+        }
 
-        val twinMessage =
-            async {
-                if (Settings.ENABLE_SENSOR_STATION) {
-                    TwinMessageManager.listenSensors()
-                }
+        val twinMessage = async {
+            if (settings.ENABLE_SENSOR_STATION) {
+                TwinMessageManager.listenSensors()
             }
+        }
 
         awaitAll(mqtt, twinMessage)
 
         logger.i { "Shutdown" }
 
         TwinMessageManager.stop()
-        MqttManager.stop()
+        if (settings.MQTT_ENABLE ) {
+            mqttManager.stop()
+        }
     }
 }

@@ -8,12 +8,13 @@ import de.osca.fama.settings.Settings
 
 class FLogger(
     tag: String,
+    debug: Boolean
 ) : Logger(
         config =
             loggerConfigInit(
                 platformLogWriter(),
                 minSeverity =
-                    if (Settings.DEBUG) {
+                    if (debug) {
                         Severity.Debug
                     } else {
                         Severity.Info

@@ -10,6 +10,7 @@ data class SensorType(
     val definition: String,
     val type: SensorTypeCategory = SensorTypeCategory.NONE,
     val unit: String,
+    val icon: String? = null,
     val order: Int,
     val createdAt: Instant,
     val updatedAt: Instant,

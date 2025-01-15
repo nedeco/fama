@@ -4,6 +4,7 @@ import de.osca.fama.digitaltwin.model.sensor.Sensor
 import de.osca.fama.generated.BuildConfig
 import de.osca.fama.logger.logger
 import de.osca.fama.settings.Settings
+import de.osca.fama.settings.SettingsImpl
 import de.osca.fama.smarthomeadapter.SmartHomeAdapter
 import io.sentry.kotlin.SentryContext
 import kotlinx.coroutines.Dispatchers
@@ -24,13 +25,16 @@ import org.hildan.krossbow.stomp.headers.AckMode
 import org.hildan.krossbow.stomp.headers.StompSubscribeHeaders
 import org.hildan.krossbow.websocket.ktor.KtorWebSocketClient
 import org.hildan.krossbow.websocket.reconnection.withAutoReconnect
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
 import kotlin.coroutines.CoroutineContext
 import kotlin.time.Duration.Companion.hours
 import kotlin.time.Duration.Companion.seconds
 
-object TwinMessageManager {
+object TwinMessageManager: KoinComponent {
+    private val settings: Settings by inject()
     private val logger by logger()
-    private val smartHomeAdapter = SmartHomeAdapter.getAdapter(Settings.SMART_HOME_TYPE)
+    private val smartHomeAdapter = SmartHomeAdapter.getAdapter(settings.SMART_HOME_TYPE)
     private var session: StompSession? = null
     private val dispatcher: CoroutineContext = Dispatchers.IO + SentryContext()
 
