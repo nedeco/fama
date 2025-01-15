@@ -1,0 +1,30 @@
+name: Kotlin lint
+
+on:
+  pull_request:
+    paths:
+      - .github/workflows/kotlin-lint.yml
+      - 'src/**/*.kt'
+      - '**.kts'
+
+jobs:
+  kotlin_lint:
+    name: Kotlin Linting
+    runs-on: ubuntu-latest
+    steps:
+      - name: ⤵️ Checkout
+        uses: actions/checkout@v3
+
+      - name: 🐘 Setup Gradle
+        uses: gradle/actions/setup-gradle@v4
+
+      - name: 🚀 Run Kotlin ktlint
+        run: ./gradlew ktlintCheck
+        continue-on-error: true
+
+      - name: ⤴️ Upload Ktlint Reports
+        uses: yutailang0119/action-ktlint@v4
+        with:
+          report-path: build/reports/ktlint/**/*.xml
+          ignore-warnings: true
+        continue-on-error: false

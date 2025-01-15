@@ -1,0 +1,20 @@
+name: Docker lint
+
+on:
+  pull_request:
+    paths:
+      - .github/workflows/docker-lint.yml
+      - 'Dockerfile'
+
+jobs:
+  docker_lint:
+    name: Dockerfile Linting
+    runs-on: ubuntu-latest
+    steps:
+      - name: ⤵️ Checkout
+        uses: actions/checkout@v3
+
+      - name: 🐳 Run Dockerfile hadolint
+        uses: hadolint/hadolint-action@v3.1.0
+        with:
+          dockerfile: Dockerfile

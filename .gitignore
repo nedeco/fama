@@ -10,6 +10,7 @@ build/
 .idea/misc.xml
 .idea/jarRepositories.xml
 .idea/compiler.xml
+.idea/ktlint-plugin.xml
 .idea/libraries/
 .idea/artifacts
 .idea/modules
