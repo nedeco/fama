@@ -26,7 +26,7 @@ fun main() {
                     cause.message?.let { Logger.e(it, tag = "ENV") }
                 }
                 else -> {
-                    if (Settings.DEBUG) {
+                    if (FamaApplication.settings.DEBUG) {
                         Logger.e("Unexpected Error -", e)
                     } else {
                         Logger.e("Unexpected Error - ${e.cause?.message}")

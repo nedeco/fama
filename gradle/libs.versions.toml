@@ -9,6 +9,7 @@ logback = "1.5.16"
 ktlint = "12.1.2"
 sentry-gradle = "4.14.1"
 cyclonedx-bom = "2.0.0"
+koin = "4.0.1"
 
 [libraries]
 # MQTT Client & Broker
@@ -29,6 +30,12 @@ kotlinx-serialization = { module = "org.jetbrains.kotlinx:kotlinx-serialization-
 # Logger
 kermit = { module = "co.touchlab:kermit", version.ref = "kermit" }
 logback = { module = "ch.qos.logback:logback-classic", version.ref = "logback" }
+
+# Koin
+koin-bom = { module = "io.insert-koin:koin-bom", version.ref = "koin" }
+koin-core = { module = "io.insert-koin:koin-core"}
+koin-test = { module = "io.insert-koin:koin-test" }
+koin-test-junit5 = { module = "io.insert-koin:koin-test-junit5" }
 
 [bundles]
 kmqtt = ["kmqtt-common", "kmqtt-broker", "kmqtt-client"]

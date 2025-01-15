@@ -2,24 +2,30 @@ package de.osca.fama.settings
 
 import de.osca.fama.smarthomeadapter.SmartHomeAdapter
 
-object Settings {
+interface Settings {
     // General
-    val DEBUG by envBoolean("DEBUG")
+    val DEBUG: Boolean
 
-    val ENABLE_SENTRY by envBoolean("ENABLE_SENTRY", true)
-    val SMART_HOME_TYPE by envEnum<SmartHomeAdapter.Type>("SMART_HOME_TYPE")
+    val ENABLE_SENTRY: Boolean
+    val SMART_HOME_TYPE: SmartHomeAdapter.Type
 
     // Devices
-    val ENABLE_SENSOR_STATION by envBoolean("ENABLE_SENSOR_STATION", defaultValue = true)
+    val ENABLE_SENSOR_STATION: Boolean
 
     // MQTT
-    val MQTT_HOST: String? by envString("MQTT_HOST")
-    val MQTT_PORT: Int by envInt("MQTT_PORT", defaultValue = 1883)
-    val MQTT_TLS_ENABLED: Boolean by envBoolean("MQTT_TLS_ENABLED")
-    val MQTT_CLIENT_ID: String by envString("MQTT_CLIENT_ID", defaultValue = "fama")
-    val MQTT_USERNAME: String? by envString("MQTT_USERNAME")
-    val MQTT_PASSWORD: String? by envString("MQTT_PASSWORD")
+    val MQTT_HOST: String?
+    val MQTT_PORT: Int
+    val MQTT_TLS_ENABLED: Boolean
+    val MQTT_CLIENT_ID: String
+    val MQTT_USERNAME: String?
+    val MQTT_PASSWORD: String?
+    val MQTT_ENABLE: Boolean
 
     // Home Assistant
-    val HOME_ASSISTANT_DISCOVERY_PREFIX: String by envString("HOME_ASSISTANT_DISCOVERY_PREFIX", defaultValue = "homeassistant")
+    val HOME_ASSISTANT_DISCOVERY_PREFIX: String
+
+    // IoBroker
+    val IO_BROKER_URL: String
+    val IO_BROKER_PREFIX: String
+    val IO_BROKER_STATION_FOLDER_PREFIX: String
 }

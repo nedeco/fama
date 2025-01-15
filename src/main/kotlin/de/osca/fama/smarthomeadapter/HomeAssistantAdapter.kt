@@ -1,10 +1,13 @@
 package de.osca.fama.smarthomeadapter
 
+import de.osca.fama.FamaApplication
 import de.osca.fama.digitaltwin.model.sensor.Sensor
 import de.osca.fama.digitaltwin.model.sensor.SensorTypeCategory
 import de.osca.fama.generated.BuildConfig
 import de.osca.fama.logger.logger
+import de.osca.fama.mqtt.MqttManager
 import de.osca.fama.settings.Settings
+import de.osca.fama.settings.SettingsImpl
 import de.osca.fama.smarthomeadapter.homeassistant.HomeAssistantComponent
 import de.osca.fama.smarthomeadapter.homeassistant.HomeAssistantDevice
 import de.osca.fama.smarthomeadapter.homeassistant.HomeAssistantDeviceClass
@@ -16,8 +19,12 @@ import kotlinx.coroutines.delay
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonNamingStrategy
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
 
-class HomeAssistantAdapter : SmartHomeAdapter {
+class HomeAssistantAdapter : SmartHomeAdapter, KoinComponent {
+    private val settings: Settings by inject()
+    private val mqttManager: MqttManager by inject()
     private val logger by logger()
     private val configuredComponents = mutableSetOf<String>()
 
@@ -34,7 +41,7 @@ class HomeAssistantAdapter : SmartHomeAdapter {
     }
 
     private fun createSensorState(sensor: Sensor) {
-        mqtt.publish(
+        mqttManager.publish(
             topic(
                 HomeAssistantComponent.SENSOR,
                 sensor.objectId,
@@ -88,7 +95,7 @@ class HomeAssistantAdapter : SmartHomeAdapter {
         val jsonString = json.encodeToString(homeAssistantPayload)
         logger.d("Sending Config Payload: $jsonString")
 
-        mqtt.publish(
+        mqttManager.publish(
             topic(
                 HomeAssistantComponent.SENSOR,
                 sensor.objectId,
@@ -100,9 +107,13 @@ class HomeAssistantAdapter : SmartHomeAdapter {
         )
     }
 
-    companion object {
-        private val discoveryPrefix = Settings.HOME_ASSISTANT_DISCOVERY_PREFIX
+    private fun topic(
+        component: HomeAssistantComponent,
+        objectId: String,
+        type: HomeAssistantTopicType,
+    ) = "$settings.HOME_ASSISTANT_DISCOVERY_PREFIX/${component.name.lowercase()}/$objectId/${type.name.lowercase()}"
 
+    companion object {
         @OptIn(ExperimentalSerializationApi::class)
         private val json =
             Json {
@@ -110,11 +121,5 @@ class HomeAssistantAdapter : SmartHomeAdapter {
                 namingStrategy = JsonNamingStrategy.SnakeCase
                 explicitNulls = false
             }
-
-        private fun topic(
-            component: HomeAssistantComponent,
-            objectId: String,
-            type: HomeAssistantTopicType,
-        ) = "$discoveryPrefix/${component.name.lowercase()}/$objectId/${type.name.lowercase()}"
     }
 }
