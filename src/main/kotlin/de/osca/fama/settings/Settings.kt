@@ -6,7 +6,7 @@ object Settings {
     // General
     val DEBUG by envBoolean("DEBUG")
 
-    val ENABLE_SENTRY by envBoolean("ENABLE_SENTRY")
+    val ENABLE_SENTRY by envBoolean("ENABLE_SENTRY", true)
     val SMART_HOME_TYPE by envEnum<SmartHomeAdapter.Type>("SMART_HOME_TYPE")
 
     // Devices
@@ -21,5 +21,5 @@ object Settings {
     val MQTT_PASSWORD: String? by envString("MQTT_PASSWORD")
 
     // Home Assistant
-    val HOME_ASSISTANT_DISCOVERY_PREFIX: String? by envString("HOME_ASSISTANT_DISCOVERY_PREFIX", defaultValue = "homeassistant")
+    val HOME_ASSISTANT_DISCOVERY_PREFIX: String by envString("HOME_ASSISTANT_DISCOVERY_PREFIX", defaultValue = "homeassistant")
 }

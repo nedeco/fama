@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Sentry error tracking
 - kotlin linter and GitHub action to validate
 - Login of RabbitMQ to docker image
 - GitHub Actions to build and deploy fama as docker image

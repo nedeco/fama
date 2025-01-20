@@ -14,7 +14,6 @@ import de.osca.fama.smarthomeadapter.homeassistant.HomeAssistantTopicType
 import io.github.davidepianca98.mqtt.packets.Qos
 import kotlinx.coroutines.delay
 import kotlinx.serialization.ExperimentalSerializationApi
-import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonNamingStrategy
 
@@ -71,16 +70,14 @@ class HomeAssistantAdapter : SmartHomeAdapter {
                 unitOfMeasurement = sensor.sensorType.unit,
                 deviceClass = deviceClass,
                 stateTopic = topic(HomeAssistantComponent.SENSOR, sensor.objectId, HomeAssistantTopicType.STATE),
-                device =
-                HomeAssistantDevice(
+                device = HomeAssistantDevice(
                     identifiers = sensor.station.objectId,
                     name = sensor.station.name,
                     swVersion = BuildConfig.VERSION,
                     configurationUrl = BuildConfig.SUPPORT_URL,
                     model = "Sensor Station"
                 ),
-                origin =
-                HomeAssistantOrigin(
+                origin = HomeAssistantOrigin(
                     name = "Fama",
                     swVersion = BuildConfig.VERSION,
                     supportUrl = BuildConfig.SUPPORT_URL
@@ -107,14 +104,12 @@ class HomeAssistantAdapter : SmartHomeAdapter {
         @OptIn(ExperimentalSerializationApi::class)
         private val json =
             Json {
+                ignoreUnknownKeys = true
                 namingStrategy = JsonNamingStrategy.SnakeCase
                 explicitNulls = false
             }
 
-        private fun topic(
-            component: HomeAssistantComponent,
-            objectId: String,
-            type: HomeAssistantTopicType,
-        ) = "$discoveryPrefix/${component.name.lowercase()}/$objectId/${type.name.lowercase()}"
+        private fun topic(component: HomeAssistantComponent, objectId: String, type: HomeAssistantTopicType) =
+            "$discoveryPrefix/${component.name.lowercase()}/$objectId/${type.name.lowercase()}"
     }
 }

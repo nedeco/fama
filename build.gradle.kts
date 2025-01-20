@@ -2,10 +2,12 @@ import org.jlleitschuh.gradle.ktlint.KtlintExtension
 import org.jlleitschuh.gradle.ktlint.reporter.ReporterType
 
 plugins {
+    application
     alias(libs.plugins.kotlin.jvm)
     alias(libs.plugins.kotlinx.serialization)
     alias(libs.plugins.ktlint)
-    application
+    alias(libs.plugins.sentry)
+    alias(libs.plugins.cyclonedx.bom)
 }
 
 group = "de.osca.fama"
@@ -54,6 +56,17 @@ configure<KtlintExtension> {
     outputColorName.set("RED")
     reporters {
         reporter(ReporterType.CHECKSTYLE)
+    }
+}
+
+sentry {
+    includeSourceContext = true
+
+    org = "open-smart-city"
+    projectName = "fama"
+    authToken = System.getenv("SENTRY_AUTH_TOKEN")
+    autoInstallation {
+        enabled = true
     }
 }
 

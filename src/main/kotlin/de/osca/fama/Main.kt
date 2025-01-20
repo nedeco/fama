@@ -2,20 +2,37 @@ package de.osca.fama
 
 import co.touchlab.kermit.Logger
 import de.osca.fama.settings.EnvVarMissingException
+import de.osca.fama.settings.Settings
+import io.sentry.Sentry
+import io.sentry.kotlin.SentryContext
+import kotlinx.coroutines.DelicateCoroutinesApi
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.async
+import kotlinx.coroutines.runBlocking
 
+@OptIn(DelicateCoroutinesApi::class)
 fun main() {
-    /*
-    if (Settings.ENABLE_SENTRY && BuildConfig.SENTRY_DSN is Nothing) {
-        Sentry.init { options ->
-            options.dsn = BuildConfig.SENTRY_DSN
-        }
-    }
-     */
-    try {
+    val job = GlobalScope.async {
         FamaApplication.start()
-    } catch (e: EnvVarMissingException) {
-        Logger.e("ENV:", e)
-    } catch (e: Throwable) {
-        Logger.e("Unexpected Error:", e)
+    }
+
+    runBlocking(SentryContext()) {
+        try {
+            job.await()
+        } catch (e: Throwable) {
+            when (val cause = e.cause) {
+                is EnvVarMissingException -> {
+                    cause.message?.let { Logger.e(it, tag = "ENV") }
+                }
+                else -> {
+                    if (Settings.DEBUG) {
+                        Logger.e("Unexpected Error -", e)
+                    } else {
+                        Logger.e("Unexpected Error - ${e.cause?.message}")
+                    }
+                    Sentry.captureException(e)
+                }
+            }
+        }
     }
 }

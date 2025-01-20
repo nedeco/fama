@@ -9,11 +9,13 @@ import io.github.davidepianca98.mqtt.packets.Qos
 import io.github.davidepianca98.mqtt.packets.mqttv5.MQTT5Properties
 import io.github.davidepianca98.mqtt.packets.mqttv5.ReasonCode
 import io.github.davidepianca98.socket.tls.TLSClientSettings
+import io.sentry.kotlin.SentryContext
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
 object MqttManager {
     private val logger by logger()
+    private val dispatcher = Dispatchers.IO + SentryContext()
 
     private var broker: Broker? = null
     private var client: MQTTClient? = null
@@ -41,17 +43,12 @@ object MqttManager {
         }
     }
 
-    suspend fun listen() = withContext(Dispatchers.IO) {
+    suspend fun listen() = withContext(dispatcher) {
         broker?.listen()
     }
 
     @OptIn(ExperimentalUnsignedTypes::class)
-    fun publish(
-        topic: String,
-        payload: String,
-        qos: Qos = Qos.AT_MOST_ONCE,
-        retain: Boolean = false,
-    ) {
+    fun publish(topic: String, payload: String, qos: Qos = Qos.AT_MOST_ONCE, retain: Boolean = false) {
         logger.d { "Publish Payload: $payload" }
         if (client != null) {
             client!!.publish(retain, qos, topic, payload.encodeToByteArray().toUByteArray())
