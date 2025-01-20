@@ -39,8 +39,8 @@ object FamaApplication {
                     "MQTT Port" to Settings.MQTT_PORT,
                     "Sensor Station enabled" to Settings.ENABLE_SENSOR_STATION,
                     "Home Assistant discovery prefix" to Settings.HOME_ASSISTANT_DISCOVERY_PREFIX,
-                    "Smart home type" to Settings.SMART_HOME_TYPE
-                )
+                    "Smart home type" to Settings.SMART_HOME_TYPE,
+                ),
             )
         }
         logger.i("Sentry is enabled")
@@ -51,15 +51,17 @@ object FamaApplication {
         MqttManager.start()
         TwinMessageManager.start()
 
-        val mqtt = async {
-            MqttManager.listen()
-        }
-
-        val twinMessage = async {
-            if (Settings.ENABLE_SENSOR_STATION) {
-                TwinMessageManager.listenSensors()
+        val mqtt =
+            async {
+                MqttManager.listen()
             }
-        }
+
+        val twinMessage =
+            async {
+                if (Settings.ENABLE_SENSOR_STATION) {
+                    TwinMessageManager.listenSensors()
+                }
+            }
 
         awaitAll(mqtt, twinMessage)
 

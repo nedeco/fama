@@ -38,9 +38,9 @@ class HomeAssistantAdapter : SmartHomeAdapter {
             topic(
                 HomeAssistantComponent.SENSOR,
                 sensor.objectId,
-                HomeAssistantTopicType.STATE
+                HomeAssistantTopicType.STATE,
             ),
-            sensor.value.toString()
+            sensor.value.toString(),
         )
     }
 
@@ -70,18 +70,20 @@ class HomeAssistantAdapter : SmartHomeAdapter {
                 unitOfMeasurement = sensor.sensorType.unit,
                 deviceClass = deviceClass,
                 stateTopic = topic(HomeAssistantComponent.SENSOR, sensor.objectId, HomeAssistantTopicType.STATE),
-                device = HomeAssistantDevice(
-                    identifiers = sensor.station.objectId,
-                    name = sensor.station.name,
-                    swVersion = BuildConfig.VERSION,
-                    configurationUrl = BuildConfig.SUPPORT_URL,
-                    model = "Sensor Station"
-                ),
-                origin = HomeAssistantOrigin(
-                    name = "Fama",
-                    swVersion = BuildConfig.VERSION,
-                    supportUrl = BuildConfig.SUPPORT_URL
-                )
+                device =
+                    HomeAssistantDevice(
+                        identifiers = sensor.station.objectId,
+                        name = sensor.station.name,
+                        swVersion = BuildConfig.VERSION,
+                        configurationUrl = BuildConfig.SUPPORT_URL,
+                        model = "Sensor Station",
+                    ),
+                origin =
+                    HomeAssistantOrigin(
+                        name = "Fama",
+                        swVersion = BuildConfig.VERSION,
+                        supportUrl = BuildConfig.SUPPORT_URL,
+                    ),
             )
         val jsonString = json.encodeToString(homeAssistantPayload)
         logger.d("Sending Config Payload: $jsonString")
@@ -90,11 +92,11 @@ class HomeAssistantAdapter : SmartHomeAdapter {
             topic(
                 HomeAssistantComponent.SENSOR,
                 sensor.objectId,
-                HomeAssistantTopicType.CONFIG
+                HomeAssistantTopicType.CONFIG,
             ),
             jsonString,
             qos = Qos.EXACTLY_ONCE,
-            retain = true
+            retain = true,
         )
     }
 
@@ -109,7 +111,10 @@ class HomeAssistantAdapter : SmartHomeAdapter {
                 explicitNulls = false
             }
 
-        private fun topic(component: HomeAssistantComponent, objectId: String, type: HomeAssistantTopicType) =
-            "$discoveryPrefix/${component.name.lowercase()}/$objectId/${type.name.lowercase()}"
+        private fun topic(
+            component: HomeAssistantComponent,
+            objectId: String,
+            type: HomeAssistantTopicType,
+        ) = "$discoveryPrefix/${component.name.lowercase()}/$objectId/${type.name.lowercase()}"
     }
 }

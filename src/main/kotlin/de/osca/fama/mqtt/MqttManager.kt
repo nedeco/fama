@@ -34,7 +34,7 @@ object MqttManager {
                     tls = if (Settings.MQTT_TLS_ENABLED) TLSClientSettings() else null,
                     clientId = Settings.MQTT_CLIENT_ID,
                     userName = Settings.MQTT_USERNAME,
-                    password = Settings.MQTT_PASSWORD?.encodeToByteArray()?.toUByteArray()
+                    password = Settings.MQTT_PASSWORD?.encodeToByteArray()?.toUByteArray(),
                 ) {
                     println(it.payload?.toByteArray()?.decodeToString())
                 }
@@ -48,7 +48,12 @@ object MqttManager {
     }
 
     @OptIn(ExperimentalUnsignedTypes::class)
-    fun publish(topic: String, payload: String, qos: Qos = Qos.AT_MOST_ONCE, retain: Boolean = false) {
+    fun publish(
+        topic: String,
+        payload: String,
+        qos: Qos = Qos.AT_MOST_ONCE,
+        retain: Boolean = false,
+    ) {
         logger.d { "Publish Payload: $payload" }
         if (client != null) {
             client!!.publish(retain, qos, topic, payload.encodeToByteArray().toUByteArray())

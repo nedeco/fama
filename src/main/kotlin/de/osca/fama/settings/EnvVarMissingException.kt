@@ -5,5 +5,5 @@ class EnvVarMissingException(key: String) :
         """
         Variable $key is missing. 
         Please read the documentation to ensure all required variables are set.
-    """
+    """,
     )

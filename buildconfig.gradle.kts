@@ -3,7 +3,9 @@ tasks.named("compileKotlin") {
 }
 
 task("generateBuildConfig") {
-    fun getEnv(key: String): String = System.getenv(key)?.let { "\"$it\"" } ?: "missingValue(\"Missing env variable $key in build.\")"
+    fun getEnv(key: String): String = System.getenv(key)?.let {
+        "\"$it\""
+    } ?: "missingValue(\"Missing env variable $key in build.\")"
 
     val outputDir = file("build/generated/src/main/kotlin/de/osca/fama/generated")
     doLast {
@@ -24,7 +26,7 @@ task("generateBuildConfig") {
             object BuildConfig {
                 private fun missingValue(key: String): Nothing = throw BuildConfigValueMissingException(key)
 
-                const val VERSION: String = "${version}"
+                const val VERSION: String = "$version"
                 val SUPPORT_URL: String = ${getEnv("SUPPORT_URL")}
                 val RABBIT_MQ_STOMP_URL: String = ${getEnv("RABBIT_MQ_STOMP_URL")}
                 val RABBIT_MQ_STOMP_USERNAME: String = ${getEnv("RABBIT_MQ_STOMP_USERNAME")}
@@ -32,7 +34,7 @@ task("generateBuildConfig") {
                 val SENTRY_DSN: String = ${getEnv("SENTRY_DSN")}
             }
             
-            """.trimIndent()
+            """.trimIndent(),
         )
     }
 }

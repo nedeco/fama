@@ -42,12 +42,12 @@ object TwinMessageManager {
             heartBeat =
                 HeartBeat(
                     minSendPeriod = 30.seconds,
-                    expectedPeriod = 100.seconds
+                    expectedPeriod = 100.seconds,
                 )
             heartBeatTolerance =
                 HeartBeatTolerance(
                     incomingMargin = 20.seconds,
-                    outgoingMargin = 20.seconds
+                    outgoingMargin = 20.seconds,
                 )
         }
 
@@ -64,12 +64,12 @@ object TwinMessageManager {
         session =
             StompClient(
                 KtorWebSocketClient().withAutoReconnect(),
-                stompConfig
+                stompConfig,
             ).connect(
                 BuildConfig.RABBIT_MQ_STOMP_URL,
                 BuildConfig.RABBIT_MQ_STOMP_USERNAME,
                 BuildConfig.RABBIT_MQ_STOMP_PASSWORD,
-                "/"
+                "/",
             )
         logger.i { "Stomp Client Connected to Server" }
     }
@@ -85,7 +85,7 @@ object TwinMessageManager {
                 logger.i { "Start Subscribing to Sensors" }
                 val header =
                     StompSubscribeHeaders(
-                        "/amq/queue/s.public.sensor"
+                        "/amq/queue/s.public.sensor",
                     ) {
                         ack = AckMode.CLIENT
                         set("prefetch-count", "50")
@@ -95,21 +95,21 @@ object TwinMessageManager {
 
                 val subscription =
                     session?.subscribeAndAutoAck<DigitalTwinMessage<Sensor>>(
-                        header
+                        header,
                     )
                 logger.i("Subscribed to Sensors")
                 subscription?.collect { message ->
                     if (!checkVersions(message)) return@collect
                     smartHomeAdapter.updateSensorStation(message.payload)
                 }
-            }
+            },
         )
     }
 
     private fun checkVersions(
         message: DigitalTwinMessage<*>,
         schemaVersion: Int = 1,
-        messageVersion: Int = 1
+        messageVersion: Int = 1,
     ): Boolean = message.schemaVersion == schemaVersion && message.messageVersion == messageVersion
 }
 

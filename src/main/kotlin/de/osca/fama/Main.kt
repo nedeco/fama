@@ -12,9 +12,10 @@ import kotlinx.coroutines.runBlocking
 
 @OptIn(DelicateCoroutinesApi::class)
 fun main() {
-    val job = GlobalScope.async {
-        FamaApplication.start()
-    }
+    val job =
+        GlobalScope.async {
+            FamaApplication.start()
+        }
 
     runBlocking(SentryContext()) {
         try {

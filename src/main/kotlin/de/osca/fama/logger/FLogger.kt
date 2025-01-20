@@ -9,15 +9,15 @@ import de.osca.fama.settings.Settings
 class FLogger(
     tag: String,
 ) : Logger(
-    config =
-    loggerConfigInit(
-        platformLogWriter(),
-        minSeverity =
-        if (Settings.DEBUG) {
-            Severity.Debug
-        } else {
-            Severity.Info
-        }
-    ),
-    tag = tag
-)
+        config =
+            loggerConfigInit(
+                platformLogWriter(),
+                minSeverity =
+                    if (Settings.DEBUG) {
+                        Severity.Debug
+                    } else {
+                        Severity.Info
+                    },
+            ),
+        tag = tag,
+    )

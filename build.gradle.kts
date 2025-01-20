@@ -43,10 +43,11 @@ kotlin {
 
 tasks.jar {
     manifest.attributes["Main-Class"] = application.mainClass
-    val dependencies = configurations
-        .runtimeClasspath
-        .get()
-        .map(::zipTree)
+    val dependencies =
+        configurations
+            .runtimeClasspath
+            .get()
+            .map(::zipTree)
     from(dependencies)
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
 }
