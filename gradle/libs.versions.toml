@@ -1,14 +1,14 @@
 [versions]
 kotlin = "2.1.0"
 kotlinx-serialization = "1.8.0"
+kotlin-ktor = "3.0.3"
 krossbow-stomp = "8.2.0"
 kmqtt = "1.0.0"
 kermit = "2.0.5"
-kotlin-ktor = "3.0.3"
-ktlint = "12.1.2"
-ktlint-github-reporter = "3.1.0"
-sentry-gradle = "4.14.1"
 logback = "1.5.16"
+ktlint = "12.1.2"
+sentry-gradle = "4.14.1"
+cyclonedx-bom = "2.0.0"
 
 [libraries]
 # MQTT Client & Broker
@@ -30,9 +30,6 @@ kotlinx-serialization = { module = "org.jetbrains.kotlinx:kotlinx-serialization-
 kermit = { module = "co.touchlab:kermit", version.ref = "kermit" }
 logback = { module = "ch.qos.logback:logback-classic", version.ref = "logback" }
 
-# Ktlint Reporter
-ktlint-reporter-github = { module = "de.musichin.ktlint.reporter:ktlint-reporter-github", version.ref = "ktlint-github-reporter" }
-
 [bundles]
 kmqtt = ["kmqtt-common", "kmqtt-broker", "kmqtt-client"]
 krossbow-stomp = ["krossbow-stomp-core", "krossbow-stomp-ktor"]
@@ -42,3 +39,4 @@ kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
 kotlinx-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 ktlint = { id = "org.jlleitschuh.gradle.ktlint", version.ref = "ktlint" }
 sentry = { id = "io.sentry.jvm.gradle", version.ref = "sentry-gradle" }
+cyclonedx-bom = { id = "org.cyclonedx.bom", version.ref = "cyclonedx-bom" }

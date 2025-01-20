@@ -5,7 +5,6 @@
     nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
     # Tools
     flake-parts.url = "github:hercules-ci/flake-parts";
-
     flake-root.url = "github:srid/flake-root";
 
     process-compose-flake.url = "github:Platonic-Systems/process-compose-flake";
@@ -37,8 +36,6 @@
               [
                 graalvm-ce
                 kotlin
-
-               # darwin.xcode_15
               ] ++ lib.optionals isDarwin (with pkgs.darwin.apple_sdk.frameworks; [
                 CoreFoundation
                 CoreServices

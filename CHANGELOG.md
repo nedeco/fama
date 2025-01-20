@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Cyclone DX BOM
 - Sentry error tracking
 - kotlin linter and GitHub action to validate
 - Login of RabbitMQ to docker image
