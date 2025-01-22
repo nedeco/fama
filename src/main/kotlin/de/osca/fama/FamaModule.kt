@@ -12,4 +12,5 @@ val famaModule = module {
     single<Settings> { SettingsImpl() }
     single<MqttManager> { MqttManagerImpl() }
     single<HttpClient> { HttpClient(CIO) }
+    single<FamaApplication> { FamaApplication() }
 }

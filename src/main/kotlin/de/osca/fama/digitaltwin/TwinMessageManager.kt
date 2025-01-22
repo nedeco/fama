@@ -1,10 +1,8 @@
 package de.osca.fama.digitaltwin
 
 import de.osca.fama.digitaltwin.model.sensor.Sensor
-import de.osca.fama.generated.BuildConfig
 import de.osca.fama.logger.logger
 import de.osca.fama.settings.Settings
-import de.osca.fama.settings.SettingsImpl
 import de.osca.fama.smarthomeadapter.SmartHomeAdapter
 import io.sentry.kotlin.SentryContext
 import kotlinx.coroutines.Dispatchers
@@ -70,9 +68,9 @@ object TwinMessageManager: KoinComponent {
                 KtorWebSocketClient().withAutoReconnect(),
                 stompConfig,
             ).connect(
-                BuildConfig.RABBIT_MQ_STOMP_URL,
-                BuildConfig.RABBIT_MQ_STOMP_USERNAME,
-                BuildConfig.RABBIT_MQ_STOMP_PASSWORD,
+                settings.RABBIT_MQ_STOMP_URL,
+                settings.RABBIT_MQ_STOMP_USERNAME,
+                settings.RABBIT_MQ_STOMP_PASSWORD,
                 "/",
             )
         logger.i { "Stomp Client Connected to Server" }

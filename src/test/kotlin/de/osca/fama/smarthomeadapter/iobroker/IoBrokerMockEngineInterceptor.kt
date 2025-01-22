@@ -1,11 +1,8 @@
-package de.osca.fama.smarthomeadapter
+package de.osca.fama.smarthomeadapter.iobroker
 
 import de.osca.fama.digitaltwin.model.sensor.Sensor
 import de.osca.fama.settings.Settings
-import de.osca.fama.smarthomeadapter.iobroker.IoBrokerApiCommandType
-import de.osca.fama.smarthomeadapter.iobroker.IoBrokerCommonType
-import de.osca.fama.smarthomeadapter.iobroker.IoBrokerObjectPayload
-import de.osca.fama.smarthomeadapter.iobroker.IoBrokerObjectType
+import de.osca.fama.smarthomeadapter.IoBrokerAdapter
 import io.ktor.client.engine.mock.*
 import io.ktor.client.request.*
 import io.ktor.http.*

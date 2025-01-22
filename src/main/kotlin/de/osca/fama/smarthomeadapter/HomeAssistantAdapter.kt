@@ -1,13 +1,10 @@
 package de.osca.fama.smarthomeadapter
 
-import de.osca.fama.FamaApplication
 import de.osca.fama.digitaltwin.model.sensor.Sensor
 import de.osca.fama.digitaltwin.model.sensor.SensorTypeCategory
-import de.osca.fama.generated.BuildConfig
 import de.osca.fama.logger.logger
 import de.osca.fama.mqtt.MqttManager
 import de.osca.fama.settings.Settings
-import de.osca.fama.settings.SettingsImpl
 import de.osca.fama.smarthomeadapter.homeassistant.HomeAssistantComponent
 import de.osca.fama.smarthomeadapter.homeassistant.HomeAssistantDevice
 import de.osca.fama.smarthomeadapter.homeassistant.HomeAssistantDeviceClass
@@ -26,7 +23,7 @@ class HomeAssistantAdapter : SmartHomeAdapter, KoinComponent {
     private val settings: Settings by inject()
     private val mqttManager: MqttManager by inject()
     private val logger by logger()
-    private val configuredComponents = mutableSetOf<String>()
+    val configuredComponents = mutableSetOf<String>()
 
     override suspend fun updateSensorStation(sensor: Sensor) {
         logger.d("Start Sending: ${sensor.sensorType.name}")
@@ -81,15 +78,15 @@ class HomeAssistantAdapter : SmartHomeAdapter, KoinComponent {
                     HomeAssistantDevice(
                         identifiers = sensor.station.objectId,
                         name = sensor.station.name,
-                        swVersion = BuildConfig.VERSION,
-                        configurationUrl = BuildConfig.SUPPORT_URL,
+                        swVersion = settings.VERSION,
+                        configurationUrl = settings.SUPPORT_URL,
                         model = "Sensor Station",
                     ),
                 origin =
                     HomeAssistantOrigin(
                         name = "Fama",
-                        swVersion = BuildConfig.VERSION,
-                        supportUrl = BuildConfig.SUPPORT_URL,
+                        swVersion = settings.VERSION,
+                        supportUrl = settings.SUPPORT_URL,
                     ),
             )
         val jsonString = json.encodeToString(homeAssistantPayload)
@@ -107,11 +104,11 @@ class HomeAssistantAdapter : SmartHomeAdapter, KoinComponent {
         )
     }
 
-    private fun topic(
+    fun topic(
         component: HomeAssistantComponent,
         objectId: String,
         type: HomeAssistantTopicType,
-    ) = "$settings.HOME_ASSISTANT_DISCOVERY_PREFIX/${component.name.lowercase()}/$objectId/${type.name.lowercase()}"
+    ) = "${settings.HOME_ASSISTANT_DISCOVERY_PREFIX}/${component.name.lowercase()}/$objectId/${type.name.lowercase()}"
 
     companion object {
         @OptIn(ExperimentalSerializationApi::class)
