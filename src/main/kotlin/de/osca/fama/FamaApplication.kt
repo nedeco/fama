@@ -1,7 +1,6 @@
 package de.osca.fama
 
 import de.osca.fama.digitaltwin.TwinMessageManager
-import de.osca.fama.generated.BuildConfig
 import de.osca.fama.logger.logger
 import de.osca.fama.mqtt.MqttManager
 import de.osca.fama.settings.EnvVarMissingException
@@ -15,24 +14,24 @@ import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 import kotlinx.coroutines.withContext
 
-object FamaApplication: KoinComponent {
+class FamaApplication: KoinComponent {
     private val mqttManager: MqttManager by inject()
     val settings: Settings by inject()
     private val logger by logger()
 
     init {
         logger.i { "Start" }
-        if (settings.ENABLE_SENTRY && BuildConfig.SENTRY_DSN !is Nothing) {
+        if (settings.ENABLE_SENTRY && settings.SENTRY_DSN !is Nothing) {
             setupSentry()
         }
     }
 
     private fun setupSentry() {
         Sentry.init { options ->
-            options.dsn = BuildConfig.SENTRY_DSN
+            options.dsn = settings.SENTRY_DSN
             options.tracesSampleRate = 1.0
             options.profilesSampleRate = 0.2
-            options.release = "fama@${BuildConfig.VERSION}"
+            options.release = "fama@${settings.VERSION}"
         }
         Sentry.configureScope { scope ->
             scope.setContexts(

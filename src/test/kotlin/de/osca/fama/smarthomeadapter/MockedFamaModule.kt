@@ -7,8 +7,8 @@ import io.ktor.client.*
 import io.ktor.client.engine.mock.*
 import org.koin.dsl.module
 
-fun getMockedFamaModule(httpClient: HttpClient? = null) = module {
+fun getMockedFamaModule(mqttManager: MqttManager? = null, httpClient: HttpClient? = null) = module {
     single<Settings> { MockedSettings() }
-    single<MqttManager> { MqttManagerImpl() }
+    single<MqttManager> { mqttManager ?: MqttManagerImpl() }
     single<HttpClient> { httpClient ?: HttpClient(MockEngine) }
 }

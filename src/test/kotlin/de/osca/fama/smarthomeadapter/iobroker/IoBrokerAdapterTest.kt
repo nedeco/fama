@@ -1,15 +1,13 @@
-package de.osca.fama.smarthomeadapter
+package de.osca.fama.smarthomeadapter.iobroker
 
 import de.osca.fama.digitaltwin.model.sensor.Sensor
 import de.osca.fama.digitaltwin.model.sensor.SensorStation
 import de.osca.fama.digitaltwin.model.sensor.SensorType
 import de.osca.fama.digitaltwin.model.sensor.SensorTypeCategory
-import de.osca.fama.famaModule
-import de.osca.fama.mqtt.MqttManager
-import de.osca.fama.smarthomeadapter.iobroker.*
+import de.osca.fama.smarthomeadapter.IoBrokerAdapter
+import de.osca.fama.smarthomeadapter.getMockedFamaModule
 import io.ktor.client.*
 import io.ktor.client.engine.mock.*
-import io.ktor.client.request.*
 import io.ktor.http.*
 import kotlinx.coroutines.runBlocking
 import kotlinx.datetime.Clock
@@ -48,7 +46,7 @@ class IoBrokerAdapterTest: KoinTest {
             modules(getMockedFamaModule())
         }
         interceptor = IoBrokerMockEngineInterceptor()
-        loadKoinModules(getMockedFamaModule(HttpClient(interceptor.mockEngine)))
+        loadKoinModules(getMockedFamaModule(httpClient = HttpClient(interceptor.mockEngine)))
         ioBrokerAdapter = IoBrokerAdapter()
     }
 

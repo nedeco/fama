@@ -17,5 +17,11 @@ class MockedSettings(
     override val HOME_ASSISTANT_DISCOVERY_PREFIX: String = "homeassistant",
     override val IO_BROKER_URL: String = "http://localhost:8087/v1/",
     override val IO_BROKER_PREFIX: String = "fama",
-    override val IO_BROKER_STATION_FOLDER_PREFIX: String = "sensor-station"
+    override val IO_BROKER_STATION_FOLDER_PREFIX: String = "sensor-station",
+    override val VERSION: String = "1.0-SNAPSHOT",
+    override val SUPPORT_URL: String = "https://example.com",
+    override val SENTRY_DSN: String = "https://sentry.io",
+    override val RABBIT_MQ_STOMP_URL: String = "",
+    override val RABBIT_MQ_STOMP_USERNAME: String = "",
+    override val RABBIT_MQ_STOMP_PASSWORD: String = ""
 ) : Settings

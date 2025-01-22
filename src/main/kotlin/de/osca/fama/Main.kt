@@ -9,12 +9,18 @@ import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
 import kotlinx.coroutines.runBlocking
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
+import org.koin.core.context.startKoin
 
 @OptIn(DelicateCoroutinesApi::class)
 fun main() {
     val job =
         GlobalScope.async {
-            FamaApplication.start()
+            startKoin { modules(famaModule) }
+            object:KoinComponent {
+                val famaApplication: FamaApplication by inject()
+            }.famaApplication.start()
         }
 
     runBlocking(SentryContext()) {
@@ -26,7 +32,9 @@ fun main() {
                     cause.message?.let { Logger.e(it, tag = "ENV") }
                 }
                 else -> {
-                    if (FamaApplication.settings.DEBUG) {
+                    if (object:KoinComponent {
+                            val settings: Settings by inject()
+                        }.settings.DEBUG) {
                         Logger.e("Unexpected Error -", e)
                     } else {
                         Logger.e("Unexpected Error - ${e.cause?.message}")
