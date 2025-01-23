@@ -1,3 +1,4 @@
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import org.jlleitschuh.gradle.ktlint.KtlintExtension
 import org.jlleitschuh.gradle.ktlint.reporter.ReporterType
 
@@ -27,14 +28,17 @@ dependencies {
     implementation(libs.logback)
     implementation(project.dependencies.platform(libs.koin.bom))
     implementation(libs.koin.core)
+    implementation(libs.koin.core.coroutines)
 
     implementation(libs.kotlin.ktor.cio)
+
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.8.1")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.8.1")
     testImplementation("org.jetbrains.kotlin:kotlin-test:1.5.31")
     testImplementation("io.ktor:ktor-client-mock:3.0.3")
     testImplementation(libs.koin.test)
     testImplementation(libs.koin.test.junit5)
+
 }
 
 application {

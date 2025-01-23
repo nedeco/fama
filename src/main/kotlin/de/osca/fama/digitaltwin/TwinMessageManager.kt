@@ -29,10 +29,10 @@ import kotlin.coroutines.CoroutineContext
 import kotlin.time.Duration.Companion.hours
 import kotlin.time.Duration.Companion.seconds
 
-object TwinMessageManager: KoinComponent {
+class TwinMessageManager : KoinComponent {
     private val settings: Settings by inject()
     private val logger by logger()
-    private val smartHomeAdapter = SmartHomeAdapter.getAdapter(settings.SMART_HOME_TYPE)
+    private val smartHomeAdapter: SmartHomeAdapter by inject()
     private var session: StompSession? = null
     private val dispatcher: CoroutineContext = Dispatchers.IO + SentryContext()
 

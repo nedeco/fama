@@ -3,11 +3,9 @@ package de.osca.fama.smarthomeadapter
 import de.osca.fama.digitaltwin.model.sensor.Sensor
 import de.osca.fama.logger.logger
 import de.osca.fama.settings.Settings
-import de.osca.fama.settings.SettingsImpl
 import de.osca.fama.smarthomeadapter.iobroker.*
-import io.ktor.client.*
+import io.ktor.client.HttpClient
 import io.ktor.client.call.*
-import io.ktor.client.engine.cio.*
 import io.ktor.client.request.*
 import io.ktor.client.statement.*
 import io.ktor.http.*
@@ -16,9 +14,13 @@ import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonNamingStrategy
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
-import java.util.*
+import kotlin.io.encoding.Base64
+import kotlin.io.encoding.ExperimentalEncodingApi
 
-class IoBrokerAdapter: SmartHomeAdapter, KoinComponent {
+class IoBrokerAdapter :
+    SmartHomeAdapter,
+    KoinComponent {
+    override val mqttEnabled: Boolean = false
     private val settings: Settings by inject()
     private val httpClient: HttpClient by inject()
     private val logger by logger()
@@ -32,27 +34,29 @@ class IoBrokerAdapter: SmartHomeAdapter, KoinComponent {
     }
 
     private suspend fun ensureFolderStructure() {
-        val famaUrl = restUrl(IoBrokerApiCommandType.OBJECT, settings.IO_BROKER_PREFIX)
+        val famaUrl = restUrl(IoBrokerApiCommandType.OBJECT, settings.ioBrokerPrefix)
         if (!httpClient.get(famaUrl).status.isSuccess()) {
-            val baseFolderPayload = IoBrokerObjectPayload.from(
-                name = settings.IO_BROKER_PREFIX,
-                type = IoBrokerObjectType.FOLDER,
-                commonType = IoBrokerCommonType.FOLDER
-            )
+            val baseFolderPayload =
+                IoBrokerObjectPayload.from(
+                    name = settings.ioBrokerPrefix,
+                    type = IoBrokerObjectType.FOLDER,
+                    commonType = IoBrokerCommonType.FOLDER,
+                )
             val baseFolderPayloadString = json.encodeToString(baseFolderPayload)
             httpClient.post(famaUrl) {
                 contentType(ContentType.Application.Json)
                 setBody(baseFolderPayloadString)
             }
         }
-        if (!httpClient.get("$famaUrl.${settings.IO_BROKER_STATION_FOLDER_PREFIX}").status.isSuccess()) {
-            val baseFolderPayload = IoBrokerObjectPayload.from(
-                name = settings.IO_BROKER_STATION_FOLDER_PREFIX,
-                type = IoBrokerObjectType.FOLDER,
-                commonType = IoBrokerCommonType.FOLDER
-            )
+        if (!httpClient.get("$famaUrl.${settings.ioBrokerStationFolderPrefix}").status.isSuccess()) {
+            val baseFolderPayload =
+                IoBrokerObjectPayload.from(
+                    name = settings.ioBrokerStationFolderPrefix,
+                    type = IoBrokerObjectType.FOLDER,
+                    commonType = IoBrokerCommonType.FOLDER,
+                )
             val baseFolderPayloadString = json.encodeToString(baseFolderPayload)
-            httpClient.post("$famaUrl.${settings.IO_BROKER_STATION_FOLDER_PREFIX}") {
+            httpClient.post("$famaUrl.${settings.ioBrokerStationFolderPrefix}") {
                 contentType(ContentType.Application.Json)
                 setBody(baseFolderPayloadString)
             }
@@ -60,13 +64,18 @@ class IoBrokerAdapter: SmartHomeAdapter, KoinComponent {
     }
 
     private suspend fun ensureStation(sensor: Sensor) {
-        val stationUrl = restUrl(IoBrokerApiCommandType.OBJECT, "${settings.IO_BROKER_PREFIX}.${settings.IO_BROKER_STATION_FOLDER_PREFIX}" + ".${sensor.station.objectId}")
+        val stationUrl =
+            restUrl(
+                IoBrokerApiCommandType.OBJECT,
+                "${settings.ioBrokerPrefix}.${settings.ioBrokerStationFolderPrefix}.${sensor.station.objectId}",
+            )
         val response = httpClient.get(stationUrl)
-        val stationPayload = IoBrokerObjectPayload.from(
-            name = sensor.station.name,
-            type = IoBrokerObjectType.FOLDER,
-            commonType = IoBrokerCommonType.FOLDER
-        )
+        val stationPayload =
+            IoBrokerObjectPayload.from(
+                name = sensor.station.name,
+                type = IoBrokerObjectType.FOLDER,
+                commonType = IoBrokerCommonType.FOLDER,
+            )
         val stationPayloadString = json.encodeToString(stationPayload)
         if (response.status.isSuccess()) {
             val responsePayload = json.decodeFromString<IoBrokerObjectPayload>(response.bodyAsText())
@@ -84,30 +93,36 @@ class IoBrokerAdapter: SmartHomeAdapter, KoinComponent {
         }
     }
 
+    @OptIn(ExperimentalEncodingApi::class)
     private suspend fun ensureIcon(sensor: Sensor): String? {
-        val icon =  sensor.sensorType.icon
+        val icon = sensor.sensorType.icon
         if (icon != null) {
-                val iconResponse = httpClient.get(icon)
-                if (iconResponse.status.isSuccess()) {
-                    val iconBase64 = Base64.getEncoder().encodeToString(iconResponse.body<ByteArray>())
-                    val contentType = ContentType.defaultForFileExtension(icon)
-                    return "data:${contentType.contentType}/${contentType.contentSubtype};base64,$iconBase64"
+            val iconResponse = httpClient.get(icon)
+            if (iconResponse.status.isSuccess()) {
+                val iconBase64 = Base64.Default.encode(iconResponse.body<ByteArray>())
+                val contentType = ContentType.defaultForFileExtension(icon)
+                return "data:${contentType.contentType}/${contentType.contentSubtype};base64,$iconBase64"
             }
         }
         return null
     }
 
     private suspend fun ensureSensor(sensor: Sensor) {
-        val sensorUrl = restUrl(IoBrokerApiCommandType.OBJECT, "${settings.IO_BROKER_PREFIX}.${settings.IO_BROKER_STATION_FOLDER_PREFIX}.${sensor.station.objectId}.${sensor.objectId}")
+        val sensorUrl =
+            restUrl(
+                IoBrokerApiCommandType.OBJECT,
+                "${settings.ioBrokerPrefix}.${settings.ioBrokerStationFolderPrefix}.${sensor.station.objectId}.${sensor.objectId}",
+            )
         val response = httpClient.get(sensorUrl)
         val icon = ensureIcon(sensor = sensor)
-        val sensorPayload = IoBrokerObjectPayload.from(
-            name = sensor.sensorType.name,
-            unit = sensor.sensorType.unit,
-            type = IoBrokerObjectType.STATE,
-            commonType = IoBrokerCommonType.NUMBER,
-            icon = icon
-        )
+        val sensorPayload =
+            IoBrokerObjectPayload.from(
+                name = sensor.sensorType.name,
+                unit = sensor.sensorType.unit,
+                type = IoBrokerObjectType.STATE,
+                commonType = IoBrokerCommonType.NUMBER,
+                icon = icon,
+            )
         val sensorPayloadString = json.encodeToString(sensorPayload)
         if (response.status.isSuccess()) {
             val responsePayload = json.decodeFromString<IoBrokerObjectPayload>(response.bodyAsText())
@@ -126,16 +141,23 @@ class IoBrokerAdapter: SmartHomeAdapter, KoinComponent {
     }
 
     private suspend fun updateSensorValue(sensor: Sensor) {
-        val sensorUrl = restUrl(IoBrokerApiCommandType.STATE, "${settings.IO_BROKER_PREFIX}.${settings.IO_BROKER_STATION_FOLDER_PREFIX}.${sensor.station.objectId}.${sensor.objectId}")
+        val sensorUrl =
+            restUrl(
+                IoBrokerApiCommandType.STATE,
+                "${settings.ioBrokerPrefix}.${settings.ioBrokerStationFolderPrefix}.${sensor.station.objectId}.${sensor.objectId}",
+            )
         val sensorStatePayload = IoBrokerStatePayload(value = sensor.value)
-        val sensorStatePayloadString =   json.encodeToString(sensorStatePayload)
+        val sensorStatePayloadString = json.encodeToString(sensorStatePayload)
         httpClient.patch(sensorUrl) {
             contentType(ContentType.Application.Json)
             setBody(sensorStatePayloadString)
         }
     }
 
-    private fun restUrl(commandType: IoBrokerApiCommandType, suffix: String): String = "${settings.IO_BROKER_URL}${commandType.name.lowercase()}/$suffix"
+    private fun restUrl(
+        commandType: IoBrokerApiCommandType,
+        suffix: String,
+    ): String = "${settings.ioBrokerUrl}${commandType.name.lowercase()}/$suffix"
 
     companion object {
         @OptIn(ExperimentalSerializationApi::class)
