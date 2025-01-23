@@ -13,7 +13,7 @@ cyclonedx-bom = "2.0.0"
 koin = "4.0.1"
 junit = "5.8.1"
 kover = "0.9.1"
-mockk = "1.12.0"
+mockk = "1.13.16"
 
 [libraries]
 # MQTT Client & Broker

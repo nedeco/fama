@@ -13,7 +13,7 @@ If you have ideas or want to add support for other systems, please submit a pull
     - Copy and rename the `.env.example` file to `.env`, then update the file with the desired settings. These are critical for connecting Fama to your home system.
     - Update the RabbitMQ connection settings in the configuration file.
     - Update the MQTT or ioBroker API settings as needed.
-    - Ensure that all required dependencies like [Java 21]() are installed and your environment meets the prerequisites before building and running the application.
+    - Ensure that all required dependencies like [Java 21](https://www.oracle.com/de/java/technologies/downloads/#java21) are installed and your environment meets the prerequisites before building and running the application.
 
 3. Build and run the application:
 ```bash
