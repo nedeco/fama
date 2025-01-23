@@ -1,10 +1,10 @@
 package de.osca.fama.smarthomeadapter
 
 import de.osca.fama.digitaltwin.model.sensor.Sensor
-import de.osca.fama.mqtt.MqttManager
-import org.koin.core.component.KoinComponent
 
 interface SmartHomeAdapter {
+    val mqttEnabled: Boolean get() = true
+
     suspend fun updateSensorStation(sensor: Sensor)
 
     enum class Type {

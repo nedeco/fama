@@ -15,12 +15,15 @@ import org.koin.core.context.startKoin
 
 @OptIn(DelicateCoroutinesApi::class)
 fun main() {
+    startKoin {
+        modules(famaModule)
+    }
+
+    val app = FamaApplication()
+
     val job =
         GlobalScope.async {
-            startKoin { modules(famaModule) }
-            object:KoinComponent {
-                val famaApplication: FamaApplication by inject()
-            }.famaApplication.start()
+            app.start()
         }
 
     runBlocking(SentryContext()) {
@@ -32,9 +35,10 @@ fun main() {
                     cause.message?.let { Logger.e(it, tag = "ENV") }
                 }
                 else -> {
-                    if (object:KoinComponent {
+                    if (object : KoinComponent {
                             val settings: Settings by inject()
-                        }.settings.DEBUG) {
+                        }.settings.debug
+                    ) {
                         Logger.e("Unexpected Error -", e)
                     } else {
                         Logger.e("Unexpected Error - ${e.cause?.message}")

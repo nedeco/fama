@@ -27,6 +27,7 @@ dependencies {
     implementation(libs.logback)
     implementation(project.dependencies.platform(libs.koin.bom))
     implementation(libs.koin.core)
+    implementation(libs.koin.core.coroutines)
 
     implementation(libs.kotlin.ktor.cio)
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.8.1")

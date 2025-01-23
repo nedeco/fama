@@ -4,30 +4,29 @@ import de.osca.fama.smarthomeadapter.SmartHomeAdapter
 
 interface Settings {
     // General
-    val DEBUG: Boolean
+    val debug: Boolean
 
-    val ENABLE_SENTRY: Boolean
-    val SMART_HOME_TYPE: SmartHomeAdapter.Type
+    val enableSentry: Boolean
+    val smartHomeType: SmartHomeAdapter.Type
 
     // Devices
-    val ENABLE_SENSOR_STATION: Boolean
+    val enableSensorStation: Boolean
 
     // MQTT
-    val MQTT_HOST: String?
-    val MQTT_PORT: Int
-    val MQTT_TLS_ENABLED: Boolean
-    val MQTT_CLIENT_ID: String
-    val MQTT_USERNAME: String?
-    val MQTT_PASSWORD: String?
-    val MQTT_ENABLE: Boolean
+    val mqttHost: String?
+    val mqttPort: Int
+    val mqttTlsEnabled: Boolean
+    val mqttClientId: String
+    val mqttUsername: String?
+    val mqttPassword: String?
 
     // Home Assistant
-    val HOME_ASSISTANT_DISCOVERY_PREFIX: String
+    val homeAssistantDiscoveryPrefix: String
 
     // IoBroker
-    val IO_BROKER_URL: String
-    val IO_BROKER_PREFIX: String
-    val IO_BROKER_STATION_FOLDER_PREFIX: String
+    val ioBrokerUrl: String
+    val ioBrokerPrefix: String
+    val ioBrokerStationFolderPrefix: String
 
     // Build Config
     val VERSION: String
