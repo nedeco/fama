@@ -91,8 +91,7 @@ class TwinMessageManager : KoinComponent {
                     ) {
                         ack = AckMode.CLIENT
                         set("prefetch-count", "50")
-                        set("x-stream-offset", "1h")
-                        set("timestamp", oneHourTimeStampFromNow)
+                        set("x-stream-offset", oneHourTimeStampFromNow)
                     }
 
                 val subscription =
