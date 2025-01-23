@@ -1,8 +1,13 @@
-package de.osca.fama.settings
+package de.osca.fama
 
+import de.osca.fama.settings.Settings
+import de.osca.fama.settings.envBoolean
+import de.osca.fama.settings.envEnum
+import de.osca.fama.settings.envInt
+import de.osca.fama.settings.envString
 import de.osca.fama.smarthomeadapter.SmartHomeAdapter
 
-class SettingsImpl : Settings {
+class MockedSettingsImpl: Settings {
     override val debug by envBoolean("DEBUG")
     override val enableSentry by envBoolean("ENABLE_SENTRY")
     override val smartHomeType by envEnum<SmartHomeAdapter.Type>("SMART_HOME_TYPE")
@@ -17,4 +22,5 @@ class SettingsImpl : Settings {
     override val ioBrokerUrl: String by envString("IO_BROKER_URL")
     override val ioBrokerPrefix: String by envString("IO_BROKER_PREFIX", defaultValue = "fama")
     override val ioBrokerStationFolderPrefix: String by envString("IO_BROKER_STATION_FOLDER_PREFIX", defaultValue = "sensor-station")
+    val envVarMissingExceptionTestVariable: String by envString("ENV_VAR_MISSING_EXCEPTION_TEST_VARIABLE")
 }

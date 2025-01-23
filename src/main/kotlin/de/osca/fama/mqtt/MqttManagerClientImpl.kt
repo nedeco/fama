@@ -1,5 +1,6 @@
 package de.osca.fama.mqtt
 
+import co.touchlab.kermit.Severity
 import de.osca.fama.logger.logger
 import de.osca.fama.settings.Settings
 import io.github.davidepianca98.MQTTClient
@@ -30,10 +31,14 @@ class MqttManagerClientImpl(
                 userName = settings.mqttUsername,
                 password = settings.mqttPassword?.encodeToByteArray()?.toUByteArray(),
             ) {
-                println(it.payload?.toByteArray()?.decodeToString())
+                logger.i("client")
             }
-
+        listen()
         logger.i("MQTT Client Started")
+    }
+
+    private fun listen(): Unit {
+        client.runSuspend()
     }
 
     @OptIn(ExperimentalUnsignedTypes::class)
@@ -43,9 +48,9 @@ class MqttManagerClientImpl(
         qos: Qos,
         retain: Boolean,
     ) {
-        logger.d { "Publish Payload: $payload" }
+        logger.d("Publish Payload: $payload")
         client.publish(retain, qos, topic, payload.encodeToByteArray().toUByteArray())
-        logger.d { "Publish Successfully" }
+        logger.d("Publish Successfully")
     }
 
     override fun stop() {

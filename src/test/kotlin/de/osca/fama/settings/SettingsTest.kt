@@ -1,5 +1,6 @@
 package de.osca.fama.settings
 
+import de.osca.fama.MockedSettingsImpl
 import de.osca.fama.smarthomeadapter.SmartHomeAdapter
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Test
@@ -25,7 +26,7 @@ class SettingsTest {
     @Test
     fun `should throw EnvVarMissingException when ioBrokerUrl is missing`() {
         assertFailsWith<EnvVarMissingException> {
-            SettingsImpl().ioBrokerUrl
+            MockedSettingsImpl().envVarMissingExceptionTestVariable
         }
     }
 
