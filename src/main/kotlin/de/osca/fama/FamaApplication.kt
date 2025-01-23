@@ -14,7 +14,8 @@ import kotlinx.coroutines.withContext
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
-class FamaApplication : KoinComponent {
+object FamaApplication: KoinComponent {
+    private val mqttManager: MqttManager by inject()
     val settings: Settings by inject()
     private val twinMessageManager: TwinMessageManager by inject()
     private val smartHomeAdapter: SmartHomeAdapter by inject()

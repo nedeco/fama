@@ -35,10 +35,7 @@ fun main() {
                     cause.message?.let { Logger.e(it, tag = "ENV") }
                 }
                 else -> {
-                    if (object : KoinComponent {
-                            val settings: Settings by inject()
-                        }.settings.debug
-                    ) {
+                    if (FamaApplication.settings.DEBUG) {
                         Logger.e("Unexpected Error -", e)
                     } else {
                         Logger.e("Unexpected Error - ${e.cause?.message}")
