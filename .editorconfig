@@ -10,6 +10,10 @@ tab_width = 4
 [*.{kt,kts}]
 ktlint_code_style = ktlint_official
 ktlint_function_signature_body_expression_wrapping = default
+ij_kotlin_name_count_to_use_star_import = 1024
+ij_kotlin_name_count_to_use_star_import_for_members = 1024
+ij_java_class_count_to_use_import_on_demand = 1024
+ij_java_names_count_to_use_import_on_demand = 1024
 
 [{*.markdown,*.md}]
 ij_markdown_force_one_space_after_blockquote_symbol = true

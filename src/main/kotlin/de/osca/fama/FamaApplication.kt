@@ -5,23 +5,26 @@ import de.osca.fama.logger.logger
 import de.osca.fama.mqtt.MqttManager
 import de.osca.fama.settings.EnvVarMissingException
 import de.osca.fama.settings.Settings
+import de.osca.fama.smarthomeadapter.SmartHomeAdapter
 import io.sentry.Sentry
 import io.sentry.kotlin.SentryContext
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
-import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.withContext
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
-import kotlinx.coroutines.withContext
 
-class FamaApplication: KoinComponent {
+object FamaApplication: KoinComponent {
     private val mqttManager: MqttManager by inject()
     val settings: Settings by inject()
+    private val twinMessageManager: TwinMessageManager by inject()
+    private val smartHomeAdapter: SmartHomeAdapter by inject()
+    private val mqttManager: MqttManager by inject()
     private val logger by logger()
 
     init {
         logger.i { "Start" }
-        if (settings.ENABLE_SENTRY && settings.SENTRY_DSN !is Nothing) {
+        if (settings.enableSentry && settings.SENTRY_DSN !is Nothing) {
             setupSentry()
         }
     }
@@ -37,12 +40,12 @@ class FamaApplication: KoinComponent {
             scope.setContexts(
                 "Settings",
                 mapOf(
-                    "Debug" to settings.DEBUG,
-                    "MQTT TLS Enabled" to settings.MQTT_TLS_ENABLED,
-                    "MQTT Port" to settings.MQTT_PORT,
-                    "Sensor Station enabled" to settings.ENABLE_SENSOR_STATION,
-                    "Home Assistant discovery prefix" to settings.HOME_ASSISTANT_DISCOVERY_PREFIX,
-                    "Smart home type" to settings.SMART_HOME_TYPE,
+                    "Debug" to settings.debug,
+                    "MQTT TLS Enabled" to settings.mqttTlsEnabled,
+                    "MQTT Port" to settings.mqttPort,
+                    "Sensor Station enabled" to settings.enableSensorStation,
+                    "Home Assistant discovery prefix" to settings.homeAssistantDiscoveryPrefix,
+                    "Smart home type" to settings.smartHomeType,
                 ),
             )
         }
@@ -52,29 +55,24 @@ class FamaApplication: KoinComponent {
     @Throws(EnvVarMissingException::class)
     suspend fun start() = withContext(Dispatchers.Default + SentryContext()) {
         logger.i { "Start Fama" }
-        if (settings.MQTT_ENABLE ) {
+        if (smartHomeAdapter.mqttEnabled) {
             mqttManager.start()
         }
-        TwinMessageManager.start()
+        twinMessageManager.start()
 
-        val mqtt = async {
-            if (settings.MQTT_ENABLE ) {
-                mqttManager.listen()
+        val twinMessage =
+            async {
+                if (settings.enableSensorStation) {
+                    twinMessageManager.listenSensors()
+                }
             }
-        }
 
-        val twinMessage = async {
-            if (settings.ENABLE_SENSOR_STATION) {
-                TwinMessageManager.listenSensors()
-            }
-        }
-
-        awaitAll(mqtt, twinMessage)
+        twinMessage.await()
 
         logger.i { "Shutdown" }
+        twinMessageManager.stop()
 
-        TwinMessageManager.stop()
-        if (settings.MQTT_ENABLE ) {
+        if (smartHomeAdapter.mqttEnabled) {
             mqttManager.stop()
         }
     }

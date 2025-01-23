@@ -19,7 +19,9 @@ import kotlinx.serialization.json.JsonNamingStrategy
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
-class HomeAssistantAdapter : SmartHomeAdapter, KoinComponent {
+class HomeAssistantAdapter :
+    SmartHomeAdapter,
+    KoinComponent {
     private val settings: Settings by inject()
     private val mqttManager: MqttManager by inject()
     private val logger by logger()
@@ -108,7 +110,7 @@ class HomeAssistantAdapter : SmartHomeAdapter, KoinComponent {
         component: HomeAssistantComponent,
         objectId: String,
         type: HomeAssistantTopicType,
-    ) = "${settings.HOME_ASSISTANT_DISCOVERY_PREFIX}/${component.name.lowercase()}/$objectId/${type.name.lowercase()}"
+    ) = "${settings.homeAssistantDiscoveryPrefix}/${component.name.lowercase()}/$objectId/${type.name.lowercase()}"
 
     companion object {
         @OptIn(ExperimentalSerializationApi::class)

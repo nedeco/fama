@@ -7,12 +7,15 @@ import org.koin.core.component.inject
 import kotlin.properties.ReadOnlyProperty
 import kotlin.reflect.KProperty
 
-class LoggerDelegate<in R : Any> : ReadOnlyProperty<R, Logger>, KoinComponent {
+class LoggerDelegate<in R : Any> :
+    ReadOnlyProperty<R, Logger>,
+    KoinComponent {
     private val settings: Settings by inject()
+
     override fun getValue(
         thisRef: R,
         property: KProperty<*>,
-    ): Logger = FLogger(thisRef::class.simpleName ?: "Fama", settings.DEBUG)
+    ): Logger = FLogger(thisRef::class.simpleName ?: "Fama", settings.debug)
 }
 
 inline fun <reified R : Any> logger() = LoggerDelegate<R>()
