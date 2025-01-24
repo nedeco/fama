@@ -27,12 +27,4 @@ interface Settings {
     val ioBrokerUrl: String
     val ioBrokerPrefix: String
     val ioBrokerStationFolderPrefix: String
-
-    // Build Config
-    val VERSION: String
-    val SUPPORT_URL: String
-    val SENTRY_DSN: String
-    val RABBIT_MQ_STOMP_URL: String
-    val RABBIT_MQ_STOMP_USERNAME: String
-    val RABBIT_MQ_STOMP_PASSWORD: String
 }

@@ -17,10 +17,4 @@ class MockedSettings(
     override val ioBrokerUrl: String = "http://localhost:8087/v1/",
     override val ioBrokerPrefix: String = "fama",
     override val ioBrokerStationFolderPrefix: String = "sensor-station",
-    override val VERSION: String = "1.0-SNAPSHOT",
-    override val SUPPORT_URL: String = "https://example.com",
-    override val SENTRY_DSN: String = "https://sentry.io",
-    override val RABBIT_MQ_STOMP_URL: String = "",
-    override val RABBIT_MQ_STOMP_USERNAME: String = "",
-    override val RABBIT_MQ_STOMP_PASSWORD: String = "",
 ) : Settings

@@ -5,6 +5,9 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 enum class IoBrokerApiCommandType {
-    @SerialName("object") OBJECT,
-    @SerialName("state") STATE;
+    @SerialName("object")
+    OBJECT,
+
+    @SerialName("state")
+    STATE,
 }

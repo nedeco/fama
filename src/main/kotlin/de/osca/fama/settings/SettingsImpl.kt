@@ -1,6 +1,5 @@
 package de.osca.fama.settings
 
-import de.osca.fama.generated.BuildConfig
 import de.osca.fama.smarthomeadapter.SmartHomeAdapter
 
 class SettingsImpl : Settings {
@@ -18,11 +17,4 @@ class SettingsImpl : Settings {
     override val ioBrokerUrl: String by envString("IO_BROKER_URL")
     override val ioBrokerPrefix: String by envString("IO_BROKER_PREFIX", defaultValue = "fama")
     override val ioBrokerStationFolderPrefix: String by envString("IO_BROKER_STATION_FOLDER_PREFIX", defaultValue = "sensor-station")
-
-    override val VERSION: String = BuildConfig.VERSION
-    override val SUPPORT_URL: String = BuildConfig.SUPPORT_URL
-    override val SENTRY_DSN: String = BuildConfig.SENTRY_DSN
-    override val RABBIT_MQ_STOMP_URL: String = BuildConfig.RABBIT_MQ_STOMP_URL
-    override val RABBIT_MQ_STOMP_USERNAME: String = BuildConfig.RABBIT_MQ_STOMP_USERNAME
-    override val RABBIT_MQ_STOMP_PASSWORD: String = BuildConfig.RABBIT_MQ_STOMP_PASSWORD
 }

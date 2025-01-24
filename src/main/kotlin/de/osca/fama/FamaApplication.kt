@@ -2,6 +2,7 @@ package de.osca.fama
 
 import co.touchlab.kermit.Logger
 import de.osca.fama.digitaltwin.TwinMessageManager
+import de.osca.fama.generated.BuildConfig
 import de.osca.fama.logger.logger
 import de.osca.fama.mqtt.MqttManager
 import de.osca.fama.settings.EnvVarMissingException
@@ -28,7 +29,7 @@ object FamaApplication : KoinComponent {
     @OptIn(DelicateCoroutinesApi::class)
     fun launch() = runBlocking {
         logger.i { "Start" }
-        if (settings.enableSentry && settings.SENTRY_DSN !is Nothing) {
+        if (settings.enableSentry && BuildConfig.SENTRY_DSN !is Nothing) {
             setupSentry()
         }
 
@@ -79,7 +80,7 @@ object FamaApplication : KoinComponent {
                 }
             }
             else -> {
-                if (FamaApplication.settings.debug) {
+                if (settings.debug) {
                     Logger.e("Unexpected Error -", error)
                 } else {
                     Logger.e("Unexpected Error - ${error.cause?.message}")
@@ -91,10 +92,10 @@ object FamaApplication : KoinComponent {
 
     private fun setupSentry() {
         Sentry.init { options ->
-            options.dsn = settings.SENTRY_DSN
+            options.dsn = BuildConfig.SENTRY_DSN
             options.tracesSampleRate = 1.0
             options.profilesSampleRate = 0.2
-            options.release = "fama@${settings.VERSION}"
+            options.release = "fama@${BuildConfig.VERSION}"
         }
         Sentry.configureScope { scope ->
             scope.setContexts(

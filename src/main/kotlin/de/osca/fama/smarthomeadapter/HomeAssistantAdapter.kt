@@ -2,6 +2,7 @@ package de.osca.fama.smarthomeadapter
 
 import de.osca.fama.digitaltwin.model.sensor.Sensor
 import de.osca.fama.digitaltwin.model.sensor.SensorTypeCategory
+import de.osca.fama.generated.BuildConfig
 import de.osca.fama.logger.logger
 import de.osca.fama.mqtt.MqttManager
 import de.osca.fama.settings.Settings
@@ -80,15 +81,15 @@ class HomeAssistantAdapter :
                     HomeAssistantDevice(
                         identifiers = sensor.station.objectId,
                         name = sensor.station.name,
-                        swVersion = settings.VERSION,
-                        configurationUrl = settings.SUPPORT_URL,
+                        swVersion = BuildConfig.VERSION,
+                        configurationUrl = BuildConfig.SUPPORT_URL,
                         model = "Sensor Station",
                     ),
                 origin =
                     HomeAssistantOrigin(
                         name = "Fama",
-                        swVersion = settings.VERSION,
-                        supportUrl = settings.SUPPORT_URL,
+                        swVersion = BuildConfig.VERSION,
+                        supportUrl = BuildConfig.SUPPORT_URL,
                     ),
             )
         val jsonString = json.encodeToString(homeAssistantPayload)
