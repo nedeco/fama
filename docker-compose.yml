@@ -21,7 +21,7 @@ services:
       - host.docker.internal:host-gateway
     ports:
       - 8081:8081
-      - 8087:8087
+      - 8093:8093
 
   openhab:
     container_name: openhab

@@ -2,9 +2,14 @@ package de.osca.fama.digitaltwin.model.sensor
 
 import kotlinx.serialization.EncodeDefault
 import kotlinx.serialization.ExperimentalSerializationApi
+import kotlinx.serialization.KSerializer
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.descriptors.SerialDescriptor
+import kotlinx.serialization.descriptors.serialDescriptor
+import kotlinx.serialization.encoding.Decoder
+import kotlinx.serialization.encoding.Encoder
 
-@Serializable
+@Serializable(with = SensorTypeCategorySerializer::class)
 enum class SensorTypeCategory {
     @OptIn(ExperimentalSerializationApi::class)
     @EncodeDefault
@@ -69,4 +74,20 @@ enum class SensorTypeCategory {
     WEIGHT,
     WIND_SPEED,
     WIND_DIRECTION,
+}
+
+object SensorTypeCategorySerializer : KSerializer<SensorTypeCategory> {
+    override val descriptor: SerialDescriptor = serialDescriptor<SensorTypeCategory>()
+
+    override fun deserialize(decoder: Decoder): SensorTypeCategory {
+        return try {
+            SensorTypeCategory.valueOf(decoder.decodeString())
+        } catch (e: IllegalArgumentException) {
+            SensorTypeCategory.NONE // Default value when none matches
+        }
+    }
+
+    override fun serialize(encoder: Encoder, value: SensorTypeCategory) {
+        encoder.encodeString(value.name)
+    }
 }
