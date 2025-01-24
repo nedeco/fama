@@ -6,5 +6,5 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class IoBrokerStatePayload(
     @SerialName("val") var value: Double,
-    @SerialName("ack") var ack: Boolean = true
+    @SerialName("ack") var ack: Boolean = true,
 )

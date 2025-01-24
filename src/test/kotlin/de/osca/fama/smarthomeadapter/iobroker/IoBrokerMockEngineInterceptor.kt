@@ -3,19 +3,25 @@ package de.osca.fama.smarthomeadapter.iobroker
 import de.osca.fama.digitaltwin.model.sensor.Sensor
 import de.osca.fama.settings.Settings
 import de.osca.fama.smarthomeadapter.IoBrokerAdapter
-import io.ktor.client.engine.mock.*
-import io.ktor.client.request.*
-import io.ktor.http.*
+import io.ktor.client.engine.mock.MockEngine
+import io.ktor.client.engine.mock.MockRequestHandleScope
+import io.ktor.client.engine.mock.respond
+import io.ktor.client.request.HttpRequestData
+import io.ktor.http.ContentType
+import io.ktor.http.HttpMethod
+import io.ktor.http.HttpStatusCode
+import io.ktor.http.headersOf
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
 class IoBrokerMockEngineInterceptor : KoinComponent {
     private val settings: Settings by inject()
-    val famaFolderUrl = "${settings.ioBrokerUrl}${IoBrokerApiCommandType.OBJECT.name.lowercase()}/${settings.IO_BROKER_PREFIX}"
-    val stationFolderUrl = "${settings.ioBrokerUrl}${IoBrokerApiCommandType.OBJECT.name.lowercase()}/${settings.IO_BROKER_PREFIX}.${settings.IO_BROKER_STATION_FOLDER_PREFIX}"
+    val folderUrl = "${settings.ioBrokerUrl}${IoBrokerApiCommandType.OBJECT.name.lowercase()}/${settings.ioBrokerPrefix}"
+    val stationFolderUrl = "$folderUrl.${settings.ioBrokerStationFolderPrefix}"
     var sensor: Sensor? = null
     var interceptRequest: MockRequestHandleScope.(HttpRequestData) -> Pair<String?, HttpStatusCode>? = { null }
     val calls = mutableListOf<Pair<String, HttpMethod>?>()
+
     val mockEngine: MockEngine =
         MockEngine { request ->
             calls += Pair(request.url.toString(), request.method)
@@ -30,7 +36,7 @@ class IoBrokerMockEngineInterceptor : KoinComponent {
                 )
             }
             when (request.url.toString()) {
-                famaFolderUrl, stationFolderUrl -> {
+                folderUrl, stationFolderUrl -> {
                     if (request.method == HttpMethod.Get || request.method == HttpMethod.Post) {
                         return@MockEngine respond("", HttpStatusCode.OK)
                     }
@@ -90,6 +96,6 @@ class IoBrokerMockEngineInterceptor : KoinComponent {
     fun sensorStateUrl(
         stationId: String,
         sensorId: String,
-    ) =
-        "${settings.ioBrokerUrl}${IoBrokerApiCommandType.STATE.name.lowercase()}/${settings.IO_BROKER_PREFIX}.${settings.IO_BROKER_STATION_FOLDER_PREFIX}.$stationId.$sensorId"
+    ) = "${settings.ioBrokerUrl}${IoBrokerApiCommandType.STATE.name.lowercase()}/" +
+        "${settings.ioBrokerPrefix}.${settings.ioBrokerStationFolderPrefix}.$stationId.$sensorId"
 }

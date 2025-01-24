@@ -1,4 +1,3 @@
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import org.jlleitschuh.gradle.ktlint.KtlintExtension
 import org.jlleitschuh.gradle.ktlint.reporter.ReporterType
 
@@ -6,6 +5,7 @@ plugins {
     application
     alias(libs.plugins.kotlin.jvm)
     alias(libs.plugins.kotlinx.serialization)
+    alias(libs.plugins.kotlinx.kover)
     alias(libs.plugins.ktlint)
     alias(libs.plugins.sentry)
     alias(libs.plugins.cyclonedx.bom)
@@ -26,19 +26,19 @@ dependencies {
     implementation(libs.bundles.kmqtt)
     implementation(libs.kermit)
     implementation(libs.logback)
+
     implementation(project.dependencies.platform(libs.koin.bom))
-    implementation(libs.koin.core)
-    implementation(libs.koin.core.coroutines)
+    implementation(libs.bundles.koin)
 
     implementation(libs.kotlin.ktor.cio)
 
-    testImplementation("org.junit.jupiter:junit-jupiter-api:5.8.1")
-    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.8.1")
-    testImplementation("org.jetbrains.kotlin:kotlin-test:1.5.31")
-    testImplementation("io.ktor:ktor-client-mock:3.0.3")
+    testImplementation(libs.junit.api)
+    testRuntimeOnly(libs.junit.engine)
+    testImplementation(libs.kotlin.test)
+    testImplementation(libs.kotlin.ktor.test)
+
     testImplementation(libs.koin.test)
     testImplementation(libs.koin.test.junit5)
-
 }
 
 application {
@@ -66,6 +66,16 @@ tasks.jar {
 
 tasks.test {
     useJUnitPlatform()
+}
+
+kover {
+    reports {
+        filters {
+            excludes {
+                classes("de.osca.fama.generated.*")
+            }
+        }
+    }
 }
 
 configure<KtlintExtension> {
