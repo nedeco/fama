@@ -14,7 +14,7 @@ class SettingsImpl : Settings {
     override val mqttUsername: String? by envString("MQTT_USERNAME")
     override val mqttPassword: String? by envString("MQTT_PASSWORD")
     override val homeAssistantDiscoveryPrefix: String by envString("HOME_ASSISTANT_DISCOVERY_PREFIX", defaultValue = "homeassistant")
-    override val ioBrokerUrl: String by envString("IO_BROKER_URL")
+    override val ioBrokerUrl: String by envString("IO_BROKER_URL", defaultValue = "http://localhost:8093/v1/")
     override val ioBrokerPrefix: String by envString("IO_BROKER_PREFIX", defaultValue = "fama")
     override val ioBrokerStationFolderPrefix: String by envString("IO_BROKER_STATION_FOLDER_PREFIX", defaultValue = "sensor-station")
 }
