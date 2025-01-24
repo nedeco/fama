@@ -1,0 +1,72 @@
+name: Kotlin lint and test
+
+on:
+  pull_request:
+    paths:
+      - .github/workflows/kotlin-lint.yml
+      - 'src/**/*.kt'
+      - '**.kts'
+
+jobs:
+  kotlin_lint:
+    name: Kotlin Linting
+    runs-on: ubuntu-latest
+    steps:
+      - name: ⤵️ Checkout
+        uses: actions/checkout@v3
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: 21
+
+      - name: 🐘 Setup Gradle
+        uses: gradle/actions/setup-gradle@v4
+
+      - name: 🚀 Run Kotlin ktlint
+        run: ./gradlew ktlintCheck
+        continue-on-error: true
+
+      - name: ⤴️ Upload Ktlint Reports
+        uses: yutailang0119/action-ktlint@v4
+        with:
+          report-path: build/reports/ktlint/**/*.xml
+          ignore-warnings: true
+        continue-on-error: false
+
+  kotlin_test:
+    name: Kotlin Test
+    runs-on: ubuntu-latest
+    steps:
+      - name: ⤵️ Checkout
+        uses: actions/checkout@v3
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: 21
+
+      - name: 🐘 Setup Gradle
+        uses: gradle/actions/setup-gradle@v4
+
+      - name: 📝 Run Kotlin tests
+        run: ./gradlew test
+        continue-on-error: true
+
+      - name: 🧾 Run Kotlin kover
+        run: ./gradlew koverXmlReport
+        continue-on-error: true
+
+      - name: ⤴️ Upload Code Coverage Report
+        uses: PavanMudigonda/jacoco-reporter@v5.0
+        with:
+          coverage_results_path: build/reports/kover/report.xml
+          coverage_report_name: Coverage
+          coverage_report_title: Kover
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          skip_check_run: false
+          minimum_coverage: 80
+          fail_below_threshold: false
+          publish_only_summary: false

@@ -3,9 +3,7 @@ tasks.named("compileKotlin") {
 }
 
 task("generateBuildConfig") {
-    fun getEnv(key: String): String = System.getenv(key)?.let {
-        "\"$it\""
-    } ?: "missingValue(\"Missing env variable $key in build.\")"
+    fun getEnv(key: String): String = System.getenv(key)?.let { "\"$it\"" } ?: "missingValue(\"Missing env variable $key in build.\")"
 
     val outputDir = file("build/generated/src/main/kotlin/de/osca/fama/generated")
     doLast {
@@ -17,10 +15,10 @@ task("generateBuildConfig") {
             class BuildConfigValueMissingException(
                 key: String,
             ) : IllegalArgumentException(
-                ""${"\""}
+                    ""${"\""}
                     Variable ${"$"}key is missing.
                     And is not set at compile time.
-                ""${"\""}.trimIndent()
+                    ""${"\""}.trimIndent(),
             )
 
             object BuildConfig {

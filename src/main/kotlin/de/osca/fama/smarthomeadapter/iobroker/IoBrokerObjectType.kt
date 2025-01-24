@@ -5,6 +5,9 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 enum class IoBrokerObjectType {
-    @SerialName("state") STATE,
-    @SerialName("folder") FOLDER
+    @SerialName("state")
+    STATE,
+
+    @SerialName("folder")
+    FOLDER,
 }

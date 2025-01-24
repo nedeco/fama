@@ -5,50 +5,52 @@ import de.osca.fama.digitaltwin.model.sensor.SensorStation
 import de.osca.fama.digitaltwin.model.sensor.SensorType
 import de.osca.fama.digitaltwin.model.sensor.SensorTypeCategory
 import de.osca.fama.smarthomeadapter.IoBrokerAdapter
-import de.osca.fama.smarthomeadapter.getMockedFamaModule
-import io.ktor.client.*
-import io.ktor.client.engine.mock.*
-import io.ktor.http.*
+import de.osca.fama.smarthomeadapter.mockModules
+import io.ktor.client.engine.mock.toByteArray
+import io.ktor.http.HttpMethod
+import io.ktor.http.HttpStatusCode
 import kotlinx.coroutines.runBlocking
 import kotlinx.datetime.Clock
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import org.koin.core.context.loadKoinModules
-import org.koin.core.context.startKoin
-import org.koin.core.context.stopKoin
+import org.junit.jupiter.api.extension.RegisterExtension
 import org.koin.test.KoinTest
+import org.koin.test.inject
+import org.koin.test.junit5.KoinTestExtension
 
-class IoBrokerAdapterTest: KoinTest {
-    private val testSensor = Sensor(
-        objectId = "sensorId",
-        value = 25.0,
-        refId = "refId",
-        station = SensorStation("stationId", "stationName", Clock.System.now(), Clock.System.now()),
-        sensorType = SensorType(
-            "sensorTypeId",
-            "sensorTypeName",
-            "definition",
-            SensorTypeCategory.TEMPERATURE,
-            "°C",
-            null,
-            0,
-            Clock.System.now(),
-            Clock.System.now()),
-        createdAt = Clock.System.now(),
-        updatedAt = Clock.System.now()
-    )
-    private var interceptor: IoBrokerMockEngineInterceptor
-    private var ioBrokerAdapter: IoBrokerAdapter
+class IoBrokerAdapterTest : KoinTest {
+    private val testSensor =
+        Sensor(
+            objectId = "sensorId",
+            value = 25.0,
+            refId = "refId",
+            station = SensorStation("stationId", "stationName", Clock.System.now(), Clock.System.now()),
+            sensorType =
+                SensorType(
+                    "sensorTypeId",
+                    "sensorTypeName",
+                    "definition",
+                    SensorTypeCategory.TEMPERATURE,
+                    "°C",
+                    null,
+                    0,
+                    Clock.System.now(),
+                    Clock.System.now(),
+                ),
+            createdAt = Clock.System.now(),
+            updatedAt = Clock.System.now(),
+        )
+    private val interceptor: IoBrokerMockEngineInterceptor by inject()
+    private val ioBrokerAdapter: IoBrokerAdapter = IoBrokerAdapter()
 
-    init {
-        stopKoin()
-        startKoin {
-            modules(getMockedFamaModule())
+    @JvmField
+    @RegisterExtension
+    val koinTestExtension =
+        KoinTestExtension.create {
+            modules(
+                mockModules,
+            )
         }
-        interceptor = IoBrokerMockEngineInterceptor()
-        loadKoinModules(getMockedFamaModule(httpClient = HttpClient(interceptor.mockEngine)))
-        ioBrokerAdapter = IoBrokerAdapter()
-    }
 
     @BeforeEach
     fun setUp() {
@@ -60,7 +62,7 @@ class IoBrokerAdapterTest: KoinTest {
     fun testIoBrokerAdapterFolderCreation() = runBlocking {
         interceptor.interceptRequest = {
             var response: Pair<String?, HttpStatusCode>? = null
-            if (it.url.toString() == interceptor.famaFolderUrl) {
+            if (it.url.toString() == interceptor.folderUrl) {
                 if (interceptor.calls.size == 1 && it.method == HttpMethod.Get) {
                     response = Pair(null, HttpStatusCode.NotFound)
                 }
@@ -78,11 +80,13 @@ class IoBrokerAdapterTest: KoinTest {
             }
             response
         }
-        val expectedCalls = listOf(
-            Pair(interceptor.famaFolderUrl, HttpMethod.Get),
-            Pair(interceptor.famaFolderUrl, HttpMethod.Post),
-            Pair(interceptor.stationFolderUrl, HttpMethod.Get),
-            Pair(interceptor.stationFolderUrl, HttpMethod.Post))
+        val expectedCalls =
+            listOf(
+                Pair(interceptor.folderUrl, HttpMethod.Get),
+                Pair(interceptor.folderUrl, HttpMethod.Post),
+                Pair(interceptor.stationFolderUrl, HttpMethod.Get),
+                Pair(interceptor.stationFolderUrl, HttpMethod.Post),
+            )
 
         ioBrokerAdapter.updateSensorStation(testSensor)
         assert(compareCalls(expectedCalls))
@@ -102,11 +106,13 @@ class IoBrokerAdapterTest: KoinTest {
             }
             response
         }
-        val expectedCalls = listOf(
-            null,
-            null,
-            Pair(interceptor.stationUrl(testSensor.station.objectId), HttpMethod.Get),
-            Pair(interceptor.stationUrl(testSensor.station.objectId), HttpMethod.Post))
+        val expectedCalls =
+            listOf(
+                null,
+                null,
+                Pair(interceptor.stationUrl(testSensor.station.objectId), HttpMethod.Get),
+                Pair(interceptor.stationUrl(testSensor.station.objectId), HttpMethod.Post),
+            )
         ioBrokerAdapter.updateSensorStation(testSensor)
         assert(compareCalls(expectedCalls))
     }
@@ -125,12 +131,14 @@ class IoBrokerAdapterTest: KoinTest {
             }
             response
         }
-        val expectedCalls = listOf(
-            null,
-            null,
-            null,
-            Pair(interceptor.sensorUrl(testSensor.station.objectId, testSensor.objectId), HttpMethod.Get),
-            Pair(interceptor.sensorUrl(testSensor.station.objectId, testSensor.objectId), HttpMethod.Post))
+        val expectedCalls =
+            listOf(
+                null,
+                null,
+                null,
+                Pair(interceptor.sensorUrl(testSensor.station.objectId, testSensor.objectId), HttpMethod.Get),
+                Pair(interceptor.sensorUrl(testSensor.station.objectId, testSensor.objectId), HttpMethod.Post),
+            )
         ioBrokerAdapter.updateSensorStation(testSensor)
         assert(compareCalls(expectedCalls))
     }
@@ -142,7 +150,7 @@ class IoBrokerAdapterTest: KoinTest {
         interceptor.interceptRequest = {
             var response: Pair<String?, HttpStatusCode>? = null
             if (it.url.toString() == interceptor.sensorStateUrl(testSensor.station.objectId, testSensor.objectId)) {
-                if (interceptor.calls.size in listOf(5,10) && it.method == HttpMethod.Patch) {
+                if (interceptor.calls.size in listOf(5, 10) && it.method == HttpMethod.Patch) {
                     runBlocking {
                         value = IoBrokerAdapter.json.decodeFromString<IoBrokerStatePayload>(it.body.toByteArray().decodeToString()).value
                     }
@@ -151,17 +159,19 @@ class IoBrokerAdapterTest: KoinTest {
             }
             response
         }
-        val expectedCalls = listOf(
-            null,
-            null,
-            null,
-            null,
-            Pair(interceptor.sensorStateUrl(testSensor.station.objectId, testSensor.objectId), HttpMethod.Patch),
-            null,
-            null,
-            null,
-            null,
-            Pair(interceptor.sensorStateUrl(testSensor.station.objectId, testSensor.objectId), HttpMethod.Patch))
+        val expectedCalls =
+            listOf(
+                null,
+                null,
+                null,
+                null,
+                Pair(interceptor.sensorStateUrl(testSensor.station.objectId, testSensor.objectId), HttpMethod.Patch),
+                null,
+                null,
+                null,
+                null,
+                Pair(interceptor.sensorStateUrl(testSensor.station.objectId, testSensor.objectId), HttpMethod.Patch),
+            )
         ioBrokerAdapter.updateSensorStation(testSensor)
         assert(value == testSensor.value)
         ioBrokerAdapter.updateSensorStation(testSensor2)

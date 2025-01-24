@@ -10,6 +10,8 @@ ktlint = "12.1.2"
 sentry-gradle = "4.14.1"
 cyclonedx-bom = "2.0.0"
 koin = "4.0.1"
+junit = "5.8.1"
+kover = "0.9.1"
 
 [libraries]
 # MQTT Client & Broker
@@ -20,6 +22,8 @@ kmqtt-common = { module = "io.github.davidepianca98:kmqtt-common-jvm", version.r
 # Stomp Client
 krossbow-stomp-core = { module = "org.hildan.krossbow:krossbow-stomp-core", version.ref = "krossbow-stomp" }
 krossbow-stomp-ktor = { module = "org.hildan.krossbow:krossbow-websocket-ktor", version.ref = "krossbow-stomp" }
+
+# Http Client and WebSocket Client
 kotlin-ktor-cio = { module = "io.ktor:ktor-client-cio", version.ref = "kotlin-ktor"}
 
 # Kotlin
@@ -35,16 +39,24 @@ logback = { module = "ch.qos.logback:logback-classic", version.ref = "logback" }
 koin-bom = { module = "io.insert-koin:koin-bom", version.ref = "koin" }
 koin-core = { module = "io.insert-koin:koin-core"}
 koin-core-coroutines = { module = "io.insert-koin:koin-core-coroutines" }
+
+# Tests
+junit-api = { module = "org.junit.jupiter:junit-jupiter-api", version.ref="junit" }
+junit-engine = { module = "org.junit.jupiter:junit-jupiter-engine", version.ref="junit" }
+kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref="kotlin" }
+kotlin-ktor-test = { module = "io.ktor:ktor-client-mock", version.ref="kotlin-ktor" }
 koin-test = { module = "io.insert-koin:koin-test" }
 koin-test-junit5 = { module = "io.insert-koin:koin-test-junit5" }
 
 [bundles]
 kmqtt = ["kmqtt-common", "kmqtt-broker", "kmqtt-client"]
 krossbow-stomp = ["krossbow-stomp-core", "krossbow-stomp-ktor"]
+koin = ["koin-core", "koin-core-coroutines"]
 
 [plugins]
 kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
 kotlinx-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
+kotlinx-kover = { id = "org.jetbrains.kotlinx.kover", version.ref = "kover" }
 ktlint = { id = "org.jlleitschuh.gradle.ktlint", version.ref = "ktlint" }
 sentry = { id = "io.sentry.jvm.gradle", version.ref = "sentry-gradle" }
 cyclonedx-bom = { id = "org.cyclonedx.bom", version.ref = "cyclonedx-bom" }
