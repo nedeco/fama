@@ -2,7 +2,7 @@ package de.osca.fama.smarthomeadapter
 
 import de.osca.fama.settings.Settings
 
-class MockedSettings(
+data class MockedSettings(
     override val debug: Boolean = true,
     override val enableSentry: Boolean = false,
     override val smartHomeType: SmartHomeAdapter.Type = SmartHomeAdapter.Type.IB,

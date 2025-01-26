@@ -1,9 +1,10 @@
 package de.osca.fama.digitaltwin
 
 import de.osca.fama.digitaltwin.model.sensor.Sensor
-import de.osca.fama.generated.BuildConfig
 import de.osca.fama.logger.logger
+import de.osca.fama.settings.BuildConfig
 import de.osca.fama.smarthomeadapter.SmartHomeAdapter
+import io.ktor.client.HttpClient
 import io.sentry.kotlin.SentryContext
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -31,7 +32,9 @@ import kotlin.time.Duration.Companion.seconds
 
 class TwinMessageManager : KoinComponent {
     private val logger by logger()
+    private val buildConfig: BuildConfig by inject()
     private val smartHomeAdapter: SmartHomeAdapter by inject()
+    private val httpClient: HttpClient by inject()
     private var session: StompSession? = null
     private val dispatcher: CoroutineContext = Dispatchers.IO + SentryContext()
 
@@ -64,12 +67,12 @@ class TwinMessageManager : KoinComponent {
         logger.i { "Stomp Client Start Connecting to Server" }
         session =
             StompClient(
-                KtorWebSocketClient().withAutoReconnect(),
+                KtorWebSocketClient(httpClient = httpClient).withAutoReconnect(),
                 stompConfig,
             ).connect(
-                BuildConfig.RABBIT_MQ_STOMP_URL,
-                BuildConfig.RABBIT_MQ_STOMP_USERNAME,
-                BuildConfig.RABBIT_MQ_STOMP_PASSWORD,
+                buildConfig.rabbitmqStompUrl,
+                buildConfig.rabbitmqStompUsername,
+                buildConfig.rabbitmqStompPassword,
                 "/",
             )
         logger.i { "Stomp Client Connected to Server" }
