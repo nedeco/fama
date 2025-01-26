@@ -1,34 +1,34 @@
 services:
   homeassistant:
     container_name: homeassistant
-    image: "ghcr.io/home-assistant/home-assistant:stable"
+    image: ghcr.io/home-assistant/home-assistant:stable
     volumes:
       - ./smart-home/ha/config/:/config
     restart: unless-stopped
     privileged: true
     extra_hosts:
-      - "host.docker.internal:host-gateway"
+      - host.docker.internal:host-gateway
     ports:
-      - "8123:8123"
+      - 8123:8123
 
   iobroker:
     container_name: iobroker
-    image: "buanet/iobroker:v10.0.0"
+    image: buanet/iobroker:v10.0.0
     volumes:
       - ./smart-home/iobroker/:/opt/iobroker
     restart: unless-stopped
     extra_hosts:
-      - "host.docker.internal:host-gateway"
+      - host.docker.internal:host-gateway
     ports:
-      - "8081:8081"
-      - "8087:8087"
+      - 8081:8081
+      - 8087:8087
 
   openhab:
     container_name: openhab
-    image: "openhab/openhab:latest"
+    image: openhab/openhab:latest
     restart: unless-stopped
     extra_hosts:
-      - "host.docker.internal:host-gateway"
+      - host.docker.internal:host-gateway
     ports:
-      - "8080:8080" # HTTP
-      - "8443:8443" # HTTPS
+      - 8080:8080 # HTTP
+      - 8443:8443 # HTTPS

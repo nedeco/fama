@@ -4,8 +4,8 @@ on:
   pull_request:
     paths:
       - .github/workflows/kotlin-lint.yml
-      - 'src/**/*.kt'
-      - '**.kts'
+      - src/**/*.kt
+      - "**.kts"
 
 jobs:
   kotlin_lint:
@@ -13,12 +13,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: ⤵️ Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Setup Java
         uses: actions/setup-java@v4
         with:
-          distribution: 'temurin'
+          distribution: temurin
           java-version: 21
 
       - name: 🐘 Setup Gradle
@@ -40,26 +40,22 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: ⤵️ Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Setup Java
         uses: actions/setup-java@v4
         with:
-          distribution: 'temurin'
+          distribution: temurin
           java-version: 21
 
       - name: 🐘 Setup Gradle
         uses: gradle/actions/setup-gradle@v4
 
-      - name: 📝 Run Kotlin tests
-        run: ./gradlew test
+      - name: 📝 Run Kotlin tests + Kover
+        run: ./gradlew test koverXmlReport
         continue-on-error: true
 
-      - name: 🧾 Run Kotlin kover
-        run: ./gradlew koverXmlReport
-        continue-on-error: true
-
-      - name: ⤴️ Upload Code Coverage Report
+      - name: 🧾 Upload Code Coverage Report
         uses: PavanMudigonda/jacoco-reporter@v5.0
         with:
           coverage_results_path: build/reports/kover/report.xml

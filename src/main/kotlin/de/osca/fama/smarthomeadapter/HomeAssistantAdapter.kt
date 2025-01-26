@@ -2,9 +2,9 @@ package de.osca.fama.smarthomeadapter
 
 import de.osca.fama.digitaltwin.model.sensor.Sensor
 import de.osca.fama.digitaltwin.model.sensor.SensorTypeCategory
-import de.osca.fama.generated.BuildConfig
 import de.osca.fama.logger.logger
 import de.osca.fama.mqtt.MqttManager
+import de.osca.fama.settings.BuildConfig
 import de.osca.fama.settings.Settings
 import de.osca.fama.smarthomeadapter.homeassistant.HomeAssistantComponent
 import de.osca.fama.smarthomeadapter.homeassistant.HomeAssistantDevice
@@ -24,6 +24,7 @@ class HomeAssistantAdapter :
     SmartHomeAdapter,
     KoinComponent {
     private val settings: Settings by inject()
+    private val buildConfig: BuildConfig by inject()
     private val mqttManager: MqttManager by inject()
     private val logger by logger()
     val configuredComponents = mutableSetOf<String>()
@@ -81,15 +82,15 @@ class HomeAssistantAdapter :
                     HomeAssistantDevice(
                         identifiers = sensor.station.objectId,
                         name = sensor.station.name,
-                        swVersion = BuildConfig.VERSION,
-                        configurationUrl = BuildConfig.SUPPORT_URL,
+                        swVersion = buildConfig.version,
+                        configurationUrl = buildConfig.supportUrl,
                         model = "Sensor Station",
                     ),
                 origin =
                     HomeAssistantOrigin(
                         name = "Fama",
-                        swVersion = BuildConfig.VERSION,
-                        supportUrl = BuildConfig.SUPPORT_URL,
+                        swVersion = buildConfig.version,
+                        supportUrl = buildConfig.supportUrl,
                     ),
             )
         val jsonString = json.encodeToString(homeAssistantPayload)

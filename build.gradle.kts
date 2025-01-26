@@ -24,8 +24,7 @@ dependencies {
     implementation(libs.kotlinx.datetime)
     implementation(libs.bundles.krossbow.stomp)
     implementation(libs.bundles.kmqtt)
-    implementation(libs.kermit)
-    implementation(libs.logback)
+    implementation(libs.bundles.kermit)
 
     implementation(project.dependencies.platform(libs.koin.bom))
     implementation(libs.bundles.koin)
@@ -66,6 +65,7 @@ tasks.jar {
 
 tasks.test {
     useJUnitPlatform()
+    jvmArgs("--add-opens", "java.base/java.util=ALL-UNNAMED")
 }
 
 kover {

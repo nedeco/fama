@@ -1,47 +1,24 @@
 package de.osca.fama.smarthomeadapter.iobroker
 
-import de.osca.fama.digitaltwin.model.sensor.Sensor
-import de.osca.fama.digitaltwin.model.sensor.SensorStation
-import de.osca.fama.digitaltwin.model.sensor.SensorType
-import de.osca.fama.digitaltwin.model.sensor.SensorTypeCategory
 import de.osca.fama.smarthomeadapter.IoBrokerAdapter
+import de.osca.fama.smarthomeadapter.TestFixture
 import de.osca.fama.smarthomeadapter.mockModules
 import io.ktor.client.engine.mock.toByteArray
 import io.ktor.http.HttpMethod
 import io.ktor.http.HttpStatusCode
 import kotlinx.coroutines.runBlocking
-import kotlinx.datetime.Clock
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.RegisterExtension
 import org.koin.test.KoinTest
 import org.koin.test.inject
 import org.koin.test.junit5.KoinTestExtension
+import kotlin.test.assertEquals
 
 class IoBrokerAdapterTest : KoinTest {
-    private val testSensor =
-        Sensor(
-            objectId = "sensorId",
-            value = 25.0,
-            refId = "refId",
-            station = SensorStation("stationId", "stationName", Clock.System.now(), Clock.System.now()),
-            sensorType =
-                SensorType(
-                    "sensorTypeId",
-                    "sensorTypeName",
-                    "definition",
-                    SensorTypeCategory.TEMPERATURE,
-                    "°C",
-                    null,
-                    0,
-                    Clock.System.now(),
-                    Clock.System.now(),
-                ),
-            createdAt = Clock.System.now(),
-            updatedAt = Clock.System.now(),
-        )
     private val interceptor: IoBrokerMockEngineInterceptor by inject()
     private val ioBrokerAdapter: IoBrokerAdapter = IoBrokerAdapter()
+    private val testSensor = TestFixture.sensor
 
     @JvmField
     @RegisterExtension
@@ -54,7 +31,7 @@ class IoBrokerAdapterTest : KoinTest {
 
     @BeforeEach
     fun setUp() {
-        interceptor.sensor = testSensor
+        interceptor.sensor = TestFixture.sensor
         interceptor.calls.clear()
     }
 
@@ -173,9 +150,9 @@ class IoBrokerAdapterTest : KoinTest {
                 Pair(interceptor.sensorStateUrl(testSensor.station.objectId, testSensor.objectId), HttpMethod.Patch),
             )
         ioBrokerAdapter.updateSensorStation(testSensor)
-        assert(value == testSensor.value)
+        assertEquals(testSensor.value, value)
         ioBrokerAdapter.updateSensorStation(testSensor2)
-        assert(value == testSensor2.value)
+        assertEquals(testSensor2.value, value)
         assert(compareCalls(expectedCalls))
     }
 
