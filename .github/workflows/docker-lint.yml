@@ -4,7 +4,7 @@ on:
   pull_request:
     paths:
       - .github/workflows/docker-lint.yml
-      - 'Dockerfile'
+      - Dockerfile
 
 jobs:
   docker_lint:

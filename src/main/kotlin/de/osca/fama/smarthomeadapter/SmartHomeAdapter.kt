@@ -13,7 +13,7 @@ interface SmartHomeAdapter {
     }
 
     companion object {
-        fun getAdapter(type: Type): SmartHomeAdapter = when (type) {
+        fun createAdapter(type: Type): SmartHomeAdapter = when (type) {
             Type.HA -> HomeAssistantAdapter()
             Type.IB -> IoBrokerAdapter()
         }

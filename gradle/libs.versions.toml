@@ -52,6 +52,7 @@ koin-test-junit5 = { module = "io.insert-koin:koin-test-junit5" }
 kmqtt = ["kmqtt-common", "kmqtt-broker", "kmqtt-client"]
 krossbow-stomp = ["krossbow-stomp-core", "krossbow-stomp-ktor"]
 koin = ["koin-core", "koin-core-coroutines"]
+kermit = ["kermit", "logback"]
 
 [plugins]
 kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }

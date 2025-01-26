@@ -1,10 +1,9 @@
 package de.osca.fama
 
-import co.touchlab.kermit.Logger
 import de.osca.fama.digitaltwin.TwinMessageManager
-import de.osca.fama.generated.BuildConfig
 import de.osca.fama.logger.logger
 import de.osca.fama.mqtt.MqttManager
+import de.osca.fama.settings.BuildConfig
 import de.osca.fama.settings.EnvVarMissingException
 import de.osca.fama.settings.Settings
 import de.osca.fama.smarthomeadapter.SmartHomeAdapter
@@ -21,6 +20,7 @@ import org.koin.core.component.inject
 
 object FamaApplication : KoinComponent {
     private val settings: Settings by inject()
+    private val buildConfig: BuildConfig by inject()
     private val twinMessageManager: TwinMessageManager by inject()
     private val smartHomeAdapter: SmartHomeAdapter by inject()
     private val mqttManager: MqttManager by inject()
@@ -29,7 +29,7 @@ object FamaApplication : KoinComponent {
     @OptIn(DelicateCoroutinesApi::class)
     fun launch() = runBlocking {
         logger.i { "Start" }
-        if (settings.enableSentry && BuildConfig.SENTRY_DSN !is Nothing) {
+        if (settings.enableSentry && !buildConfig.sentryDsn.isNullOrBlank()) {
             setupSentry()
         }
 
@@ -76,14 +76,14 @@ object FamaApplication : KoinComponent {
         when (val cause = error.cause) {
             is EnvVarMissingException -> {
                 cause.message?.let {
-                    Logger.e(it, tag = "ENV")
+                    logger.e(it, tag = "ENV")
                 }
             }
             else -> {
                 if (settings.debug) {
-                    Logger.e("Unexpected Error -", error)
+                    logger.e("Unexpected Error -", error)
                 } else {
-                    Logger.e("Unexpected Error - ${error.cause?.message}")
+                    logger.e("Unexpected Error - ${error.message ?: error.cause?.message}")
                 }
                 Sentry.captureException(error)
             }
@@ -92,10 +92,10 @@ object FamaApplication : KoinComponent {
 
     private fun setupSentry() {
         Sentry.init { options ->
-            options.dsn = BuildConfig.SENTRY_DSN
+            options.dsn = buildConfig.sentryDsn
             options.tracesSampleRate = 1.0
             options.profilesSampleRate = 0.2
-            options.release = "fama@${BuildConfig.VERSION}"
+            options.release = "fama@${buildConfig.version}"
         }
         Sentry.configureScope { scope ->
             scope.setContexts(
