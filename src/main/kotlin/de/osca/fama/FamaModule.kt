@@ -33,7 +33,7 @@ val famaModule =
             val settings: Settings = get()
             SmartHomeAdapter.createAdapter(settings.smartHomeType)
         }
-        single {
+        single<TwinMessageManager> {
             TwinMessageManager()
         }
     }

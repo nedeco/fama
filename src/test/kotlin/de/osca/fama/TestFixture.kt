@@ -1,4 +1,4 @@
-package de.osca.fama.smarthomeadapter
+package de.osca.fama
 
 import de.osca.fama.digitaltwin.model.sensor.Sensor
 import de.osca.fama.digitaltwin.model.sensor.SensorStation

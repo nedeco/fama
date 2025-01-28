@@ -1,9 +1,9 @@
 package de.osca.fama.digitaltwin
 
 import de.osca.fama.famaModule
+import de.osca.fama.mockModules
 import de.osca.fama.settings.BuildConfig
 import de.osca.fama.smarthomeadapter.SmartHomeAdapter
-import de.osca.fama.smarthomeadapter.mockModules
 import io.ktor.client.HttpClient
 import io.mockk.Called
 import io.mockk.coEvery

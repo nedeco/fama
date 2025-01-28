@@ -1,9 +1,9 @@
 package de.osca.fama.smarthomeadapter.homeassistant
 
+import de.osca.fama.TestFixture
+import de.osca.fama.mockModules
 import de.osca.fama.settings.BuildConfig
 import de.osca.fama.smarthomeadapter.HomeAssistantAdapter
-import de.osca.fama.smarthomeadapter.TestFixture
-import de.osca.fama.smarthomeadapter.mockModules
 import kotlinx.coroutines.test.runTest
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.Json

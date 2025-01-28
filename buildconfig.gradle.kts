@@ -13,6 +13,7 @@ task("generateBuildConfig") {
             package de.osca.fama.generated
             
             import de.osca.fama.settings.BuildConfig
+            import de.osca.fama.settings.missingValue
             
             class BuildConfigImpl: BuildConfig {
                 override val version: String = "$version"

@@ -1,8 +1,8 @@
 package de.osca.fama.smarthomeadapter.iobroker
 
+import de.osca.fama.TestFixture
+import de.osca.fama.mockModules
 import de.osca.fama.smarthomeadapter.IoBrokerAdapter
-import de.osca.fama.smarthomeadapter.TestFixture
-import de.osca.fama.smarthomeadapter.mockModules
 import io.ktor.client.engine.mock.toByteArray
 import io.ktor.http.HttpMethod
 import io.ktor.http.HttpStatusCode
