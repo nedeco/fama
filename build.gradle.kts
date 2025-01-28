@@ -35,9 +35,10 @@ dependencies {
     testRuntimeOnly(libs.junit.engine)
     testImplementation(libs.kotlin.test)
     testImplementation(libs.kotlin.ktor.test)
-
+    testImplementation(libs.kotlin.coroutines.test)
     testImplementation(libs.koin.test)
     testImplementation(libs.koin.test.junit5)
+    testImplementation(libs.mockk)
 }
 
 application {
@@ -65,7 +66,10 @@ tasks.jar {
 
 tasks.test {
     useJUnitPlatform()
-    jvmArgs("--add-opens", "java.base/java.util=ALL-UNNAMED")
+    jvmArgs(
+        "--add-opens",
+        "java.base/java.util=ALL-UNNAMED",
+    )
 }
 
 kover {

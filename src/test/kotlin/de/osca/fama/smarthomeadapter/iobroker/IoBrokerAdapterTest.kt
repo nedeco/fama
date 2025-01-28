@@ -7,6 +7,7 @@ import io.ktor.client.engine.mock.toByteArray
 import io.ktor.http.HttpMethod
 import io.ktor.http.HttpStatusCode
 import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.RegisterExtension
@@ -36,7 +37,7 @@ class IoBrokerAdapterTest : KoinTest {
     }
 
     @Test
-    fun testIoBrokerAdapterFolderCreation() = runBlocking {
+    fun testIoBrokerAdapterFolderCreation() = runTest {
         interceptor.interceptRequest = {
             var response: Pair<String?, HttpStatusCode>? = null
             if (it.url.toString() == interceptor.folderUrl) {
@@ -70,7 +71,7 @@ class IoBrokerAdapterTest : KoinTest {
     }
 
     @Test
-    fun testIoBrokerAdapterStationCreation() = runBlocking {
+    fun testIoBrokerAdapterStationCreation() = runTest {
         interceptor.interceptRequest = {
             var response: Pair<String?, HttpStatusCode>? = null
             if (it.url.toString() == interceptor.stationUrl(testSensor.station.objectId)) {
@@ -95,7 +96,7 @@ class IoBrokerAdapterTest : KoinTest {
     }
 
     @Test
-    fun testIoBrokerAdapterSensorCreation() = runBlocking {
+    fun testIoBrokerAdapterSensorCreation() = runTest {
         interceptor.interceptRequest = {
             var response: Pair<String?, HttpStatusCode>? = null
             if (it.url.toString() == interceptor.sensorUrl(testSensor.station.objectId, testSensor.objectId)) {
@@ -121,7 +122,7 @@ class IoBrokerAdapterTest : KoinTest {
     }
 
     @Test
-    fun testIoBrokerAdapterSensorValue() = runBlocking {
+    fun testIoBrokerAdapterSensorValue() = runTest {
         var value: Double? = null
         val testSensor2 = testSensor.copy(value = testSensor.value + 1.0)
         interceptor.interceptRequest = {
