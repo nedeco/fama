@@ -1,6 +1,7 @@
 [versions]
 kotlin = "2.1.0"
 kotlinx-serialization = "1.8.0"
+kotlinx-coroutine = "1.10.1"
 kotlin-ktor = "3.0.3"
 krossbow-stomp = "8.2.0"
 kmqtt = "1.0.0"
@@ -12,6 +13,7 @@ cyclonedx-bom = "2.0.0"
 koin = "4.0.1"
 junit = "5.8.1"
 kover = "0.9.1"
+mockk = "1.12.0"
 
 [libraries]
 # MQTT Client & Broker
@@ -44,9 +46,11 @@ koin-core-coroutines = { module = "io.insert-koin:koin-core-coroutines" }
 junit-api = { module = "org.junit.jupiter:junit-jupiter-api", version.ref="junit" }
 junit-engine = { module = "org.junit.jupiter:junit-jupiter-engine", version.ref="junit" }
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref="kotlin" }
+kotlin-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref="kotlinx-coroutine" }
 kotlin-ktor-test = { module = "io.ktor:ktor-client-mock", version.ref="kotlin-ktor" }
 koin-test = { module = "io.insert-koin:koin-test" }
 koin-test-junit5 = { module = "io.insert-koin:koin-test-junit5" }
+mockk = { group = "io.mockk", name = "mockk", version.ref = "mockk" }
 
 [bundles]
 kmqtt = ["kmqtt-common", "kmqtt-broker", "kmqtt-client"]
