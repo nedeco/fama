@@ -1,6 +1,7 @@
-package de.osca.fama.smarthomeadapter
+package de.osca.fama
 
 import de.osca.fama.settings.Settings
+import de.osca.fama.smarthomeadapter.SmartHomeAdapter
 
 data class MockedSettings(
     override val debug: Boolean = true,

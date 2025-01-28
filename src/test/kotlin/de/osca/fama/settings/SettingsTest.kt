@@ -1,4 +1,4 @@
-package de.osca.fama.smarthomeadapter.settings
+package de.osca.fama.settings
 
 import de.osca.fama.settings.EnvVarMissingException
 import de.osca.fama.settings.SettingsImpl
