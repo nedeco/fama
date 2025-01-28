@@ -4,7 +4,7 @@ import de.osca.fama.settings.BuildConfig
 import de.osca.fama.smarthomeadapter.HomeAssistantAdapter
 import de.osca.fama.smarthomeadapter.TestFixture
 import de.osca.fama.smarthomeadapter.mockModules
-import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.test.runTest
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonNamingStrategy
@@ -39,7 +39,7 @@ class HomeAssistantAdapterTest : KoinTest {
     }
 
     @Test
-    fun testSensorCreation() = runBlocking {
+    fun testSensorCreation() = runTest {
         val homeAssistantPayload =
             HomeAssistantPayload(
                 uniqueId = testSensor.objectId,
@@ -87,7 +87,7 @@ class HomeAssistantAdapterTest : KoinTest {
     }
 
     @Test
-    fun testSensorStateCreation() = runBlocking {
+    fun testSensorStateCreation() = runTest {
         homeAssistantAdapter.updateSensorStation(testSensor)
         assert(
             mqttManager.messages[1].first ==
