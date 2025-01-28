@@ -9,9 +9,10 @@ class BuildConfigValueMissingException(
         """.trimIndent(),
     )
 
-interface BuildConfig {
-    fun missingValue(key: String): Nothing = throw BuildConfigValueMissingException(key)
+@Throws(BuildConfigValueMissingException::class)
+fun missingValue(key: String): Nothing = throw BuildConfigValueMissingException(key)
 
+interface BuildConfig {
     val version: String
     val supportUrl: String
     val rabbitmqStompUrl: String

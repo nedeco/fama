@@ -42,6 +42,7 @@ class EnvDelegate<T>(
 
 private fun Boolean?.orDefault(default: Boolean) = this ?: default
 
+@Throws(EnvVarMissingException::class)
 inline fun <reified T> env(
     key: String,
     defaultValue: T? = null,
@@ -50,21 +51,25 @@ inline fun <reified T> env(
     noinline converter: (String) -> T?,
 ): EnvDelegate<T> = EnvDelegate(key, defaultValue, validator, validationError, converter)
 
+@Throws(EnvVarMissingException::class)
 fun envString(
     key: String,
     defaultValue: String? = null,
 ): EnvDelegate<String> = env(key, defaultValue, converter = { it })
 
+@Throws(EnvVarMissingException::class)
 fun envInt(
     key: String,
     defaultValue: Int? = null,
 ): EnvDelegate<Int> = env(key, defaultValue, converter = { it.toIntOrNull() })
 
+@Throws(EnvVarMissingException::class)
 fun envBoolean(
     key: String,
     defaultValue: Boolean = false,
 ): EnvDelegate<Boolean> = env(key, defaultValue, converter = { it.toBooleanStrictOrNull() })
 
+@Throws(EnvVarMissingException::class)
 inline fun <reified T : Enum<T>> envEnum(
     key: String,
     defaultValue: T? = null,

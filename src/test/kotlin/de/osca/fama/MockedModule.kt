@@ -1,4 +1,4 @@
-package de.osca.fama.smarthomeadapter
+package de.osca.fama
 
 import de.osca.fama.mqtt.MqttManager
 import de.osca.fama.settings.BuildConfig
