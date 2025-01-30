@@ -4,7 +4,6 @@ tasks.named("compileKotlin") {
 
 task("generateBuildConfig") {
     fun getEnv(key: String): String = System.getenv(key)?.let { "\"$it\"" } ?: "missingValue(\"Missing env variable $key in build.\")"
-
     val outputDir = file("build/generated/src/main/kotlin/de/osca/fama/generated")
     doLast {
         outputDir.mkdirs()
@@ -15,7 +14,7 @@ task("generateBuildConfig") {
             import de.osca.fama.settings.BuildConfig
             import de.osca.fama.settings.missingValue
             
-            class BuildConfigImpl: BuildConfig {
+            class BuildConfigImpl : BuildConfig {
                 override val version: String = "$version"
                 override val supportUrl: String = ${getEnv("SUPPORT_URL")}
                 override val rabbitmqStompUrl: String = ${getEnv("RABBIT_MQ_STOMP_URL")}

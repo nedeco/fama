@@ -1,7 +1,5 @@
 package de.osca.fama.settings
 
-import de.osca.fama.settings.EnvVarMissingException
-import de.osca.fama.settings.SettingsImpl
 import de.osca.fama.smarthomeadapter.SmartHomeAdapter
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Test

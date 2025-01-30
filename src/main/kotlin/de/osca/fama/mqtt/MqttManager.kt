@@ -15,10 +15,11 @@ interface MqttManager {
     fun stop()
 
     companion object {
-        fun createManager(mqttHost: String?): MqttManager = if (mqttHost.isNullOrBlank()) {
-            MqttManagerBrokerImpl()
-        } else {
-            MqttManagerClientImpl(mqttHost)
-        }
+        fun createManager(mqttHost: String?): MqttManager =
+            if (mqttHost.isNullOrBlank()) {
+                MqttManagerBrokerImpl()
+            } else {
+                MqttManagerClientImpl(mqttHost)
+            }
     }
 }
