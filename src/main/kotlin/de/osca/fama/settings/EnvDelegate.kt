@@ -32,12 +32,13 @@ class EnvDelegate<T>(
     operator fun getValue(
         thisRef: Any?,
         property: KProperty<*>,
-    ): T = value ?: if (property.returnType.isMarkedNullable) {
-        @Suppress("UNCHECKED_CAST")
-        value as T
-    } else {
-        throw EnvVarMissingException(property.name) // throw if not nullable
-    }
+    ): T =
+        value ?: if (property.returnType.isMarkedNullable) {
+            @Suppress("UNCHECKED_CAST")
+            value as T
+        } else {
+            throw EnvVarMissingException(property.name) // throw if not nullable
+        }
 }
 
 private fun Boolean?.orDefault(default: Boolean) = this ?: default
@@ -73,6 +74,7 @@ fun envBoolean(
 inline fun <reified T : Enum<T>> envEnum(
     key: String,
     defaultValue: T? = null,
-): EnvDelegate<T> = env(key, defaultValue, converter = { value ->
-    enumValues<T>().find { it.name.equals(value, ignoreCase = true) }
-})
+): EnvDelegate<T> =
+    env(key, defaultValue, converter = { value ->
+        enumValues<T>().find { it.name.equals(value, ignoreCase = true) }
+    })

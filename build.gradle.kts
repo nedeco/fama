@@ -1,4 +1,3 @@
-import org.jlleitschuh.gradle.ktlint.KtlintExtension
 import org.jlleitschuh.gradle.ktlint.reporter.ReporterType
 
 plugins {
@@ -82,9 +81,9 @@ kover {
     }
 }
 
-configure<KtlintExtension> {
-    outputToConsole.set(true)
-    outputColorName.set("RED")
+ktlint {
+    outputToConsole = true
+    outputColorName = "RED"
     reporters {
         reporter(ReporterType.CHECKSTYLE)
     }

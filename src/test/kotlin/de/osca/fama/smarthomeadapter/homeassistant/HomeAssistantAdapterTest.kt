@@ -39,66 +39,68 @@ class HomeAssistantAdapterTest : KoinTest {
     }
 
     @Test
-    fun testSensorCreation() = runTest {
-        val homeAssistantPayload =
-            HomeAssistantPayload(
-                uniqueId = testSensor.objectId,
-                name = testSensor.sensorType.name,
-                icon = null,
-                unitOfMeasurement = testSensor.sensorType.unit,
-                deviceClass =
-                    HomeAssistantDeviceClass.entries.find {
-                        it.name == testSensor.sensorType.name
-                    },
-                stateTopic =
-                    homeAssistantAdapter.topic(
-                        HomeAssistantComponent.SENSOR,
-                        testSensor.objectId,
-                        HomeAssistantTopicType.STATE,
-                    ),
-                device =
-                    HomeAssistantDevice(
-                        identifiers = testSensor.station.objectId,
-                        name = testSensor.station.name,
-                        swVersion = buildConfig.version,
-                        configurationUrl = buildConfig.supportUrl,
-                        model = "Sensor Station",
-                    ),
-                origin =
-                    HomeAssistantOrigin(
-                        name = "Fama",
-                        swVersion = buildConfig.version,
-                        supportUrl = buildConfig.supportUrl,
-                    ),
-            )
+    fun testSensorCreation() =
+        runTest {
+            val homeAssistantPayload =
+                HomeAssistantPayload(
+                    uniqueId = testSensor.objectId,
+                    name = testSensor.sensorType.name,
+                    icon = null,
+                    unitOfMeasurement = testSensor.sensorType.unit,
+                    deviceClass =
+                        HomeAssistantDeviceClass.entries.find {
+                            it.name == testSensor.sensorType.name
+                        },
+                    stateTopic =
+                        homeAssistantAdapter.topic(
+                            HomeAssistantComponent.SENSOR,
+                            testSensor.objectId,
+                            HomeAssistantTopicType.STATE,
+                        ),
+                    device =
+                        HomeAssistantDevice(
+                            identifiers = testSensor.station.objectId,
+                            name = testSensor.station.name,
+                            swVersion = buildConfig.version,
+                            configurationUrl = buildConfig.supportUrl,
+                            model = "Sensor Station",
+                        ),
+                    origin =
+                        HomeAssistantOrigin(
+                            name = "Fama",
+                            swVersion = buildConfig.version,
+                            supportUrl = buildConfig.supportUrl,
+                        ),
+                )
 
-        homeAssistantAdapter.updateSensorStation(testSensor)
-        assertContains(homeAssistantAdapter.configuredComponents, testSensor.objectId)
-        assertEquals(homeAssistantPayload, json.decodeFromString<HomeAssistantPayload>(mqttManager.messages[0].second))
-        assertEquals(2, mqttManager.messages.size)
-        assertEquals(
-            homeAssistantAdapter.topic(
-                HomeAssistantComponent.SENSOR,
-                testSensor.objectId,
-                HomeAssistantTopicType.CONFIG,
-            ),
-            mqttManager.messages[0].first,
-        )
-    }
+            homeAssistantAdapter.updateSensorStation(testSensor)
+            assertContains(homeAssistantAdapter.configuredComponents, testSensor.objectId)
+            assertEquals(homeAssistantPayload, json.decodeFromString<HomeAssistantPayload>(mqttManager.messages[0].second))
+            assertEquals(2, mqttManager.messages.size)
+            assertEquals(
+                homeAssistantAdapter.topic(
+                    HomeAssistantComponent.SENSOR,
+                    testSensor.objectId,
+                    HomeAssistantTopicType.CONFIG,
+                ),
+                mqttManager.messages[0].first,
+            )
+        }
 
     @Test
-    fun testSensorStateCreation() = runTest {
-        homeAssistantAdapter.updateSensorStation(testSensor)
-        assert(
-            mqttManager.messages[1].first ==
+    fun testSensorStateCreation() =
+        runTest {
+            homeAssistantAdapter.updateSensorStation(testSensor)
+            assertEquals(
+                mqttManager.messages[1].first,
                 homeAssistantAdapter.topic(
                     HomeAssistantComponent.SENSOR,
                     testSensor.objectId,
                     HomeAssistantTopicType.STATE,
                 ),
-        )
-        assertEquals(testSensor.value.toString(), mqttManager.messages[1].second)
-    }
+            )
+            assertEquals(testSensor.value.toString(), mqttManager.messages[1].second)
+        }
 
     companion object {
         @OptIn(ExperimentalSerializationApi::class)

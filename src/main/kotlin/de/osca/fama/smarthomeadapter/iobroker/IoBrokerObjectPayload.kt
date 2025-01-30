@@ -15,15 +15,16 @@ data class IoBrokerObjectPayload(
             type: IoBrokerObjectType,
             commonType: IoBrokerCommonType,
             icon: String? = null,
-        ): IoBrokerObjectPayload = IoBrokerObjectPayload(
-            common =
-                IoBrokerCommon(
-                    name = name,
-                    unit = unit,
-                    type = commonType,
-                    icon = icon,
-                ),
-            type = type,
-        )
+        ): IoBrokerObjectPayload =
+            IoBrokerObjectPayload(
+                common =
+                    IoBrokerCommon(
+                        name = name,
+                        unit = unit,
+                        type = commonType,
+                        icon = icon,
+                    ),
+                type = type,
+            )
     }
 }
