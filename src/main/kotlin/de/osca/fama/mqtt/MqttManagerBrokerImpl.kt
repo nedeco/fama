@@ -26,9 +26,10 @@ class MqttManagerBrokerImpl :
         }
     }
 
-    private suspend fun listen(): Unit = withContext(Dispatchers.IO) {
-        broker.listen()
-    }
+    private suspend fun listen(): Unit =
+        withContext(Dispatchers.IO) {
+            broker.listen()
+        }
 
     @OptIn(ExperimentalUnsignedTypes::class)
     override fun publish(

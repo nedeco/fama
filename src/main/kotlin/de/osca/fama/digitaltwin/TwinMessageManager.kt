@@ -83,31 +83,32 @@ class TwinMessageManager : KoinComponent {
         session?.disconnect()
     }
 
-    suspend fun listenSensors() = withContext(dispatcher) {
-        subscriptions.add(
-            launch {
-                logger.i { "Start Subscribing to Sensors" }
-                val header =
-                    StompSubscribeHeaders(
-                        "/amq/queue/s.public.sensor",
-                    ) {
-                        ack = AckMode.CLIENT
-                        set("prefetch-count", "50")
-                        set("x-stream-offset", oneHourTimeStampFromNow)
-                    }
+    suspend fun listenSensors() =
+        withContext(dispatcher) {
+            subscriptions.add(
+                launch {
+                    logger.i { "Start Subscribing to Sensors" }
+                    val header =
+                        StompSubscribeHeaders(
+                            "/amq/queue/s.public.sensor",
+                        ) {
+                            ack = AckMode.CLIENT
+                            set("prefetch-count", "50")
+                            set("x-stream-offset", oneHourTimeStampFromNow)
+                        }
 
-                val subscription =
-                    session?.subscribeAndAutoAck<DigitalTwinMessage<Sensor>>(
-                        header,
-                    )
-                logger.i("Subscribed to Sensors")
-                subscription?.collect { message ->
-                    if (!checkVersions(message)) return@collect
-                    smartHomeAdapter.updateSensorStation(message.payload)
-                }
-            },
-        )
-    }
+                    val subscription =
+                        session?.subscribeAndAutoAck<DigitalTwinMessage<Sensor>>(
+                            header,
+                        )
+                    logger.i("Subscribed to Sensors")
+                    subscription?.collect { message ->
+                        if (!checkVersions(message)) return@collect
+                        smartHomeAdapter.updateSensorStation(message.payload)
+                    }
+                },
+            )
+        }
 
     private fun checkVersions(
         message: DigitalTwinMessage<*>,

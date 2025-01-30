@@ -7,10 +7,8 @@ insert_final_newline = true
 max_line_length = 140
 tab_width = 4
 
-[{*.kt,*.kts}]
+[*.{kt,kts}]
 ktlint_code_style = ktlint_official
-ktlint_function_signature_body_expression_wrapping = default
-ktlint_function_signature_wrapping_rule_always_with_minimum_parameters = standard
 ij_kotlin_name_count_to_use_star_import = 2147483647
 ij_kotlin_name_count_to_use_star_import_for_members = 2147483647
 ij_kotlin_packages_to_use_import_on_demand = ""

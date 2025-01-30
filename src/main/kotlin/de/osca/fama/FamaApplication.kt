@@ -27,50 +27,52 @@ object FamaApplication : KoinComponent {
     private val logger by logger()
 
     @OptIn(DelicateCoroutinesApi::class)
-    fun launch() = runBlocking {
-        logger.i { "Start" }
-        if (settings.enableSentry && !buildConfig.sentryDsn.isNullOrBlank()) {
-            setupSentry()
-        }
-
-        val job =
-            GlobalScope.async {
-                start()
+    fun launch() =
+        runBlocking {
+            logger.i { "Start" }
+            if (settings.enableSentry && !buildConfig.sentryDsn.isNullOrBlank()) {
+                setupSentry()
             }
 
-        runBlocking(SentryContext()) {
-            try {
-                job.await()
-            } catch (e: Throwable) {
-                handleError(e)
-            }
-        }
-    }
+            val job =
+                GlobalScope.async {
+                    start()
+                }
 
-    @Throws(EnvVarMissingException::class)
-    private suspend fun start() = withContext(Dispatchers.Default + SentryContext()) {
-        if (smartHomeAdapter.mqttEnabled) {
-            mqttManager.start()
-        }
-
-        twinMessageManager.start()
-
-        val twinMessage =
-            async {
-                if (settings.enableSensorStation) {
-                    twinMessageManager.listenSensors()
+            runBlocking(SentryContext()) {
+                try {
+                    job.await()
+                } catch (e: Throwable) {
+                    handleError(e)
                 }
             }
-
-        twinMessage.await()
-
-        logger.i { "Shutdown" }
-        twinMessageManager.stop()
-
-        if (smartHomeAdapter.mqttEnabled) {
-            mqttManager.stop()
         }
-    }
+
+    @Throws(EnvVarMissingException::class)
+    private suspend fun start() =
+        withContext(Dispatchers.Default + SentryContext()) {
+            if (smartHomeAdapter.mqttEnabled) {
+                mqttManager.start()
+            }
+
+            twinMessageManager.start()
+
+            val twinMessage =
+                async {
+                    if (settings.enableSensorStation) {
+                        twinMessageManager.listenSensors()
+                    }
+                }
+
+            twinMessage.await()
+
+            logger.i { "Shutdown" }
+            twinMessageManager.stop()
+
+            if (smartHomeAdapter.mqttEnabled) {
+                mqttManager.stop()
+            }
+        }
 
     private fun handleError(error: Throwable) {
         when (val cause = error.cause) {

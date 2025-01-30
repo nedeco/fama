@@ -75,21 +75,23 @@ class TwinMessageManagerTest : KoinTest {
     }
 
     @Test
-    fun `test start method`() = runTest {
-        twinMessageManager.start()
-        verify(atLeast = 1) { buildConfig.rabbitmqStompUrl }
-        verify { httpClient wasNot Called }
-        coVerify { anyConstructed<StompClient>().connect(allAny()) }
-    }
+    fun `test start method`() =
+        runTest {
+            twinMessageManager.start()
+            verify(atLeast = 1) { buildConfig.rabbitmqStompUrl }
+            verify { httpClient wasNot Called }
+            coVerify { anyConstructed<StompClient>().connect(allAny()) }
+        }
 
     @Test
-    fun `test stop method`() = runTest {
-        twinMessageManager.start()
-        twinMessageManager.stop()
-        verify(atLeast = 1) { buildConfig.rabbitmqStompUrl }
-        verify { smartHomeAdapter wasNot Called }
-        coVerify { stompSession.disconnect() }
-    }
+    fun `test stop method`() =
+        runTest {
+            twinMessageManager.start()
+            twinMessageManager.stop()
+            verify(atLeast = 1) { buildConfig.rabbitmqStompUrl }
+            verify { smartHomeAdapter wasNot Called }
+            coVerify { stompSession.disconnect() }
+        }
 
     /*@Test
     fun `test listenSensors method`() = runTest {
