@@ -13,6 +13,67 @@ You can find the official ioBroker documentation at the following link:
 
 This site contains detailed guides, tutorials, and information about adapters, installation, and configuration.
 
+## Setting Up Fama with Docker
+
+Fama can be deployed using Docker, either with a simple `docker run` command or using `docker-compose` for more complex setups.
+
+### Prerequisites
+Before running Fama, ensure you have the following installed:
+- Docker ([Installation Guide](https://docs.docker.com/get-docker/))
+- Docker Compose (if using `docker-compose.yml` setup)
+- A home automation system (Home Assistant, OpenHAB, or ioBroker)
+
+## Running Fama with `docker run`
+You can start Fama with a single `docker run` command, passing the required environment variables:
+
+```sh
+docker run -d --name fama \
+  -e SMART_HOME_TYPE=IB \
+  -e IO_BROKER_URL=http://<iobroker-ip>:8081 \
+  devopsnedeco/fama
+```
+
+## Running Fama with Docker Compose
+For more flexibility, you can use a `docker-compose.yml` file:
+
+```yaml
+services:
+  fama:
+    image: devopsnedeco/fama
+    container_name: fama
+    restart: unless-stopped
+    ports:
+      - 1883:1883
+    environment:
+      SMART_HOME_TYPE: "IB"
+      IO_BROKER_URL: "http://<iobroker-ip>:8081"
+```
+
+To start Fama using Docker Compose, run:
+```sh
+docker-compose up -d
+```
+
+## Environment Variables
+Fama requires several environment variables to function correctly. Below is a list of the key variables:
+
+| Variable | Description |
+|----------|-------------|
+| `SMART_HOME_TYPE` | Type of home automation system (`IB` for ioBroker) |
+| `IO_BROKER_URL` | URL of ioBroker (required for ioBroker integration) |
+
+## Verifying the Setup
+Once Fama is running, you can verify its status using:
+```sh
+docker ps
+```
+This should display a running container named `fama`.
+
+To check logs for troubleshooting:
+```sh
+docker logs -f fama
+```
+
 ## Adapters
 
 After installation, access the ioBroker web interface at:

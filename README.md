@@ -39,12 +39,12 @@ See the [guide on connecting Fama to ioBroker](/documentation/homesystem/IOBROKE
 
 Contributions are welcome! If you have ideas or want to add support for other systems, please submit a pull request or open an issue.
 
-See the [contribution guide](/documentation/CONTRIBUTING.md) for more information.
+See the [contribution guide](CONTRIBUTING.md) for more information.
 
 ## License
 
-Fama is licensed under the LIZENZEINFÜGEN.
+Fama is licensed under the [Open Smart City License](LICENSE.md) .
 
 ## Contact
 
-For questions or support, please contact us at [EMAIL-EINFÜGEN@HIER.HIN]().
+For questions or support, please contact us at [fama@nedeco.de](mailto:fama@nedeco.de).
