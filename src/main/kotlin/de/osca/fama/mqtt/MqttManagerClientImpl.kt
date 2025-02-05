@@ -1,6 +1,5 @@
 package de.osca.fama.mqtt
 
-import co.touchlab.kermit.Severity
 import de.osca.fama.logger.logger
 import de.osca.fama.settings.Settings
 import io.github.davidepianca98.MQTTClient
@@ -37,7 +36,7 @@ class MqttManagerClientImpl(
         logger.i("MQTT Client Started")
     }
 
-    private fun listen(): Unit {
+    private fun listen() {
         client.runSuspend()
     }
 

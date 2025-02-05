@@ -87,7 +87,10 @@ object SensorTypeCategorySerializer : KSerializer<SensorTypeCategory> {
         }
     }
 
-    override fun serialize(encoder: Encoder, value: SensorTypeCategory) {
+    override fun serialize(
+        encoder: Encoder,
+        value: SensorTypeCategory,
+    ) {
         encoder.encodeString(value.name)
     }
 }

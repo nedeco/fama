@@ -1,9 +1,6 @@
 package de.osca.fama.digitaltwin
 
 import de.osca.fama.digitaltwin.model.sensor.Sensor
-import de.osca.fama.digitaltwin.model.sensor.SensorStation
-import de.osca.fama.digitaltwin.model.sensor.SensorType
-import de.osca.fama.digitaltwin.model.sensor.SensorTypeCategory
 import de.osca.fama.logger.logger
 import de.osca.fama.settings.BuildConfig
 import de.osca.fama.smarthomeadapter.SmartHomeAdapter
@@ -12,7 +9,6 @@ import io.sentry.kotlin.SentryContext
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.cancelAndJoin
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
