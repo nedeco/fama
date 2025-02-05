@@ -11,6 +11,7 @@ env:
   RABBIT_MQ_STOMP_USERNAME: ${{ vars.RABBIT_MQ_STOMP_USERNAME }}
   RABBIT_MQ_STOMP_PASSWORD: ${{ secrets.RABBIT_MQ_STOMP_PASSWORD }}
   FAMA_VERSION: ${{ github.ref_name }}
+  SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
 
 jobs:
   docker:
