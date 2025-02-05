@@ -1,7 +1,6 @@
 package de.osca.fama
 
 import de.osca.fama.digitaltwin.TwinMessageManager
-import de.osca.fama.digitaltwin.TwinMessageManagerTest
 import de.osca.fama.mqtt.MqttManager
 import de.osca.fama.settings.BuildConfig
 import de.osca.fama.smarthomeadapter.SmartHomeAdapter
@@ -9,13 +8,9 @@ import io.mockk.Runs
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.every
-import io.mockk.impl.annotations.MockK
 import io.mockk.impl.annotations.RelaxedMockK
 import io.mockk.junit5.MockKExtension
 import io.mockk.just
-import io.mockk.mockk
-import io.mockk.mockkStatic
-import io.mockk.spyk
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.extension.ExtendWith
@@ -23,11 +18,6 @@ import org.junit.jupiter.api.extension.RegisterExtension
 import org.koin.dsl.module
 import org.koin.test.KoinTest
 import org.koin.test.junit5.KoinTestExtension
-import java.lang.reflect.Field
-import java.util.logging.Logger
-import kotlin.reflect.KMutableProperty1
-import kotlin.reflect.full.memberProperties
-import kotlin.reflect.jvm.isAccessible
 import kotlin.test.Test
 
 @ExtendWith(MockKExtension::class)
@@ -46,25 +36,26 @@ class FamaApplicationTest : KoinTest {
 
     @JvmField
     @RegisterExtension
-    val koinTestExtension = KoinTestExtension.create {
-        modules(
-            mockModules,
-            module {
-                single {
-                    smartHomeAdapter
-                }
-                single {
-                    buildConfig
-                }
-                single {
-                    twinMessageManager
-                }
-                single {
-                    mqttManager
-                }
-            }
-        )
-    }
+    val koinTestExtension =
+        KoinTestExtension.create {
+            modules(
+                mockModules,
+                module {
+                    single {
+                        smartHomeAdapter
+                    }
+                    single {
+                        buildConfig
+                    }
+                    single {
+                        twinMessageManager
+                    }
+                    single {
+                        mqttManager
+                    }
+                },
+            )
+        }
 
     @BeforeEach
     fun setUp() {
@@ -73,20 +64,23 @@ class FamaApplicationTest : KoinTest {
     }
 
     @Test
-    fun `test launch method`() = runTest {
-        coEvery { twinMessageManager.start() } just Runs
-        coEvery { twinMessageManager.listenSensors()
-            Unit } just Runs
-        coEvery { twinMessageManager.stop() } just Runs
-        coEvery { mqttManager.start() } just Runs
-        coEvery { mqttManager.stop() } just Runs
+    fun `test launch method`() =
+        runTest {
+            coEvery { twinMessageManager.start() } just Runs
+            coEvery {
+                twinMessageManager.listenSensors()
+                Unit
+            } just Runs
+            coEvery { twinMessageManager.stop() } just Runs
+            coEvery { mqttManager.start() } just Runs
+            coEvery { mqttManager.stop() } just Runs
 
-        FamaApplication.launch()
+            FamaApplication.launch()
 
-        coVerify { twinMessageManager.start() }
-        coVerify { twinMessageManager.listenSensors() }
-        coVerify { twinMessageManager.stop() }
-        coVerify { mqttManager.start() }
-        coVerify { mqttManager.stop() }
-    }
+            coVerify { twinMessageManager.start() }
+            coVerify { twinMessageManager.listenSensors() }
+            coVerify { twinMessageManager.stop() }
+            coVerify { mqttManager.start() }
+            coVerify { mqttManager.stop() }
+        }
 }

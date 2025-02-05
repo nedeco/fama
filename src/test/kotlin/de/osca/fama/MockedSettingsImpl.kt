@@ -7,7 +7,7 @@ import de.osca.fama.settings.envInt
 import de.osca.fama.settings.envString
 import de.osca.fama.smarthomeadapter.SmartHomeAdapter
 
-class MockedSettingsImpl: Settings {
+class MockedSettingsImpl : Settings {
     override val debug by envBoolean("DEBUG")
     override val enableSentry by envBoolean("ENABLE_SENTRY")
     override val smartHomeType by envEnum<SmartHomeAdapter.Type>("SMART_HOME_TYPE")
