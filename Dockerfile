@@ -1,4 +1,4 @@
-FROM bellsoft/liberica-openjdk-alpine:21.0.5 AS fama
+FROM bellsoft/liberica-openjdk-alpine:21.0.12.1 AS fama
 
 LABEL \
   maintainer="Nedeco" \
